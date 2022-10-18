@@ -30,6 +30,13 @@
 			description="JFIELD_ALIAS_DESC"
 			hint="JFIELD_ALIAS_PLACEHOLDER"
 		/>
+		<field
+			name="articletext"
+			type="editor"
+			label="COM_CONTENT_FIELD_ARTICLETEXT_LABEL"
+			filter="JComponentHelper::filterText"
+			buttons="true"
+		/>
 
 		<field
 			name="note"

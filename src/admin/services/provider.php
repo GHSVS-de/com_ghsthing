@@ -3,6 +3,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 use Joomla\CMS\Categories\CategoryFactoryInterface;
 use Joomla\CMS\Extension\Service\Provider\CategoryFactory;
 
@@ -30,6 +32,12 @@ return new class implements ServiceProviderInterface
 {
 	public function register(Container $container)
 	{
+
+		$app = Factory::getApplication();
+		$wa = $app->getDocument()->getWebAssetManager();
+		$wa->getRegistry()->addExtensionRegistryFile('com_ghsthing');
+
+
 		$ns = '\\GHSVS\\Component\\GhsThing';
 
 		$container->registerServiceProvider(new CategoryFactory($ns));
