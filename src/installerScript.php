@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Log\Log;
 
-class com_ghsvsthingsInstallerScript extends InstallerScript
+class com_ghsthingInstallerScript extends InstallerScript
 {
 	/**
 	 * A list of files to be deleted with method removeFiles().
