@@ -5,7 +5,7 @@ namespace GHSVS\Component\GhsThing\Administrator\Controller;
 
 class GhsthingsController extends AdminController
 {
-	public function getModel($name = 'Ghsvsthings', $prefix = 'Administrator', $config = array('ignore_request' => true))
+	public function getModel($name = 'Ghsthings', $prefix = 'Administrator', $config = array('ignore_request' => true))
 	{
 		return parent::getModel($name, $prefix, $config);
 	}
