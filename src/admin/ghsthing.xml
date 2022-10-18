@@ -47,7 +47,11 @@
 		<folder>tmpl</folder>
 	</files>
 
-	<media destination="com_ghsthing" folder="media">
+	<!--/Wenn sich /media/ und /admin/ auf selber Verzeichnisebene befinden und das installerScript.php
+	im Ordner /admin/, dann muss dem /media/-Ordner "../" hinzugefügt werden, da sonst Installer::parseMedia()
+	den $source-Pfad falsch interprtiert als /admin/media/ statt /media/
+	-->
+	<media destination="com_ghsthing" folder="../media">
 		<folder>css</folder>
 	</media>
 
@@ -67,6 +71,7 @@
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
+			<filename>ghsthing.xml</filename>
 			<filename>installerScript.php</filename>
 			<filename>LICENSE.txt</filename>
 			<folder>forms</folder>
