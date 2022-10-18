@@ -54,7 +54,7 @@ class HtmlView extends BaseHtmlView
 					$toolbar->addNew('ghsthing.add');
 			}
 
-			if (!$this->isEmptyState && $canDo->get('core.edit.state')) {
+			if ($canDo->get('core.edit.state')) {
 					$dropdown = $toolbar->dropdownButton('status-group')
 							->text('JTOOLBAR_CHANGE_STATUS')
 							->toggleSplit(false)
@@ -100,7 +100,7 @@ class HtmlView extends BaseHtmlView
 					}
 			}
 
-			if (!$this->isEmptyState && $this->state->get('filter.published') == -2 && $canDo->get('core.delete')) {
+			if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete')) {
 					$toolbar->delete('ghsthings.delete')
 							->text('JTOOLBAR_EMPTY_TRASH')
 							->message('JGLOBAL_CONFIRM_DELETE')
