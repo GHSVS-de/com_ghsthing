@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" method="upgrade">
+	<name>COM_GHSTHING</name>
+	<author>G@HService Berlin Neukölln, Volkmar Volli Schlothauer</author>
+	<creationDate>2022-10-16</creationDate>
+	<copyright>(C) 2022, G@HService Berlin Neukölln, Volkmar Volli Schlothauer (ghsvs.de)</copyright>
+	<license>GNU General Public License version 3 or later; see LICENSE.txt.</license>
+	<authorUrl>https://ghsvs.de</authorUrl>
+	<version>2022.10.16</version>
+	<description>COM_GHSTHING_XML_DESCRIPTION</description>
+
+	<updateservers><server type="extension" priority="1" name="COM_GHSTHING">https://raw.githubusercontent.com/GHSVS-de/upadateservers/master/com_ghsthing-update.xml</server></updateservers>
+
+	<changelogurl>https://raw.githubusercontent.com/GHSVS-de/upadateservers/master/com_ghsthing-changelog.xml</changelogurl>
+
+	<infourl>https://updates.ghsvs.de/changelog.php?file=com_ghsthing</infourl>
+
+	<scriptfile>installerScript.php</scriptfile>
+	<minimumPhp>7.4.0</minimumPhp>
+	<maximumPhp>8.99999.99999</maximumPhp>
+	<minimumJoomla>4.0.0</minimumJoomla>
+	<maximumJoomla>4.9999.9999</maximumJoomla>
+	<allowDowngrades>1</allowDowngrades>
+
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+		</sql>
+	</uninstall>
+
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+
+	<files folder="site">
+		<folder>forms</folder>
+		<folder>language</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+
+	<media destination="com_ghsthing" folder="media">
+		<folder>css</folder>
+	</media>
+
+	<administration>
+		<menu>COM_GHSTHING</menu>
+
+		<submenu>
+			<menu link="option=com_ghsthing">
+				COM_GHSTHING_GHSTHINGS
+			</menu>
+
+			<menu link="option=com_categories&amp;extension=com_ghsthing" view="categories">
+					COM_GHSTHING_CATEGORIES
+			</menu>
+		</submenu>
+
+		<files folder="admin">
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+			<filename>LICENSE.txt</filename>
+			<folder>forms</folder>
+			<folder>language</folder>
+			<folder>services</folder>
+			<folder>sql</folder>
+			<folder>src</folder>
+			<folder>tmpl</folder>
+		</files>
+
+	</administration>
+
+	<namespace path="src">GHSVS\Component\GhsThing</namespace>
+</extension>
