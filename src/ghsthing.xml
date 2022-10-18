@@ -15,7 +15,7 @@
 
 	<infourl>https://updates.ghsvs.de/changelog.php?file=com_ghsthing</infourl>
 
-	<scriptfile>installerScript.php</scriptfile>
+	<scriptfile>admin/installerScript.php</scriptfile>
 	<minimumPhp>7.4.0</minimumPhp>
 	<maximumPhp>8.99999.99999</maximumPhp>
 	<minimumJoomla>4.0.0</minimumJoomla>
@@ -67,6 +67,7 @@
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
+			<filename>installerScript.php</filename>
 			<filename>LICENSE.txt</filename>
 			<folder>forms</folder>
 			<folder>language</folder>
