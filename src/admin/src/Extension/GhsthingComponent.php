@@ -27,7 +27,7 @@ use Joomla\CMS\Tag\TagServiceInterface;
 use Joomla\CMS\Tag\TagServiceTrait;
 use Joomla\CMS\User\UserFactoryInterface;
 //use Joomla\Component\GhsThing\Administrator\Service\HTML\AdministratorService;
-use Joomla\Component\GhsThing\Administrator\Service\HTML\Icon;
+use GHSVS\Component\GhsThing\Administrator\Service\HTML\IconGhsthing;
 use Psr\Container\ContainerInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -71,7 +71,7 @@ class GhsthingComponent extends MVCComponent implements
     public function boot(ContainerInterface $container)
     {
         //$this->getRegistry()->register('contactadministrator', new AdministratorService());
-        $this->getRegistry()->register('ghsthingicon', new Icon($container->get(UserFactoryInterface::class)));
+        $this->getRegistry()->register('ghsthingicon', new IconGhsthing($container->get(UserFactoryInterface::class)));
     }
 
     /**

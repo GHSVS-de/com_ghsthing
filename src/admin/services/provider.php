@@ -19,7 +19,7 @@ use Joomla\CMS\Extension\Service\Provider\ComponentDispatcherFactory;
 use Joomla\CMS\Extension\Service\Provider\MVCFactory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 
-use Joomla\Component\Contact\Administrator\Extension\GhsthingComponent;
+use GHSVS\Component\GhsThing\Administrator\Extension\GhsthingComponent;
 // Hier nicht benötigt, da obige die MVCComponent extended.
 // use Joomla\CMS\Extension\MVCComponent;
 
