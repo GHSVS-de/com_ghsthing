@@ -18,13 +18,16 @@ class HtmlView extends BaseHtmlView
 	public function display($tpl = null)
 	{
 		$this->form = $this->get('Form');
+		$this->item = $this->get('Item');
 		$this->addToolBar();
 		parent::display($tpl);
 	}
 
 	protected function addToolBar()
 	{
-		ToolbarHelper::title(Text::_('COM_GHSVSTHING_GHSVSTHING_ADD'));
-		ToolbarHelper::apply('ghsvsthing.apply');
+		ToolbarHelper::title(Text::_('COM_GHSTHING_GHSTHING_ADD'));
+		ToolbarHelper::apply('ghsthing.apply');
+		ToolbarHelper::save('ghsthing.save');
+		ToolbarHelper::cancel('ghsthing.cancel', 'JTOOLBAR_CLOSE');
 	}
 }
