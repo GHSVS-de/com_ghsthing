@@ -110,10 +110,10 @@ class com_ghsthingInstallerScript extends InstallerScript
 		$contentType = [];
 		$contentType['type_alias'] = 'com_ghsthing.ghsthing';
 
-		$typesTable = Table::getInstance('ContentType', 'Table');
-		$table->load(['type_alias' => $contentType['type_alias']]);
+		$typesTable = Table::getInstance('ContentType', 'Joomla\\CMS\Table\\');
+		$typesTable->load(['type_alias' => $contentType['type_alias']]);
 
-		$contentType['type_id'] = $typesTable->type_id ?? 0;
+		$contentType['type_id'] = empty($typesTable->type_id) ? 0 : $typesTable->type_id;
 		$contentType['type_title'] = 'Ghsthing';
 		$contentType['table'] = '{
 			"special": {
