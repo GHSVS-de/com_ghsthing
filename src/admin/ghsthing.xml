@@ -15,7 +15,7 @@
 
 	<infourl>https://updates.ghsvs.de/changelog.php?file=com_ghsthing</infourl>
 
-	<scriptfile>admin/installerScript.php</scriptfile>
+	<scriptfile>installerScript.php</scriptfile>
 	<minimumPhp>7.4.0</minimumPhp>
 	<maximumPhp>8.99999.99999</maximumPhp>
 	<minimumJoomla>4.0.0</minimumJoomla>
