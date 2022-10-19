@@ -12,6 +12,8 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Log\Log;
+//use Joomla\CMS\Table\ContentType;
+use Joomla\CMS\Table\Table;
 
 class com_ghsthingInstallerScript extends InstallerScript
 {
@@ -94,11 +96,122 @@ class com_ghsthingInstallerScript extends InstallerScript
 	 *
 	 * @return void
 	 */
-	function postflight($type, $parent)
+	public function postflight($type, $parent)
 	{
-		if ($type === 'update')
-		{
+		if ($type === 'update') {
 			$this->removeFiles();
 		}
+
+		$this->saveContentTypes();
+	}
+
+	private function saveContentTypes()
+	{
+		$contentType = [];
+		$contentType['type_alias'] = 'com_ghsthing.ghsthing';
+
+		$typesTable = Table::getInstance('ContentType', 'Table');
+		$table->load(['type_alias' => $contentType['type_alias']]);
+
+		$contentType['type_id'] = $typesTable->type_id ?? 0;
+		$contentType['type_title'] = 'Ghsthing';
+		$contentType['table'] = '{
+			"special": {
+			  "dbtable": "#__ghsthing",
+			  "key": "id",
+			  "type": "GhsthingTable",
+			  "prefix": "GHSVS\\\\Component\\\\GhsThing\\\\Administrator\\\\Table\\\\",
+			  "config": "array()"
+			},
+			"common": {
+			  "dbtable": "#__ucm_content",
+			  "key": "ucm_id",
+			  "type": "Corecontent",
+			  "prefix": "Joomla\\\\CMS\\\\Table\\\\",
+			  "config": "array()"
+			}
+		}';
+		$contentType['rules'] = '';
+		$contentType['field_mappings'] = '{
+			"common": {
+			  "core_content_item_id": "id",
+			  "core_title": "title",
+			  "core_alias": "alias",
+				"core_body":"introtext",
+			  "core_state": "state",
+			  "core_catid": "catid",
+				"core_created_time":"created",
+				"core_modified_time":"modified",
+				"core_publish_up":"publish_up",
+				"core_publish_down":"publish_down",
+				"core_images":"images",
+				"core_urls":"urls",
+				"core_params":"params",
+				"core_version":"version",
+				"core_ordering":"ordering",
+				"core_metakey":"metakey",
+				"core_metadesc":"metadesc",
+				"core_access":"access",
+				"core_metadata":"metadata",
+				"core_featured":"featured",
+				"core_language":"language",
+				"note":"note",
+				"asset_id":"asset_id"
+			},
+			"special": {
+				"fulltext":"fulltext"
+			}
+		}';
+		$contentType['rules'] = '';
+		$contentType['router'] = 'GhsthingHelperRoute::getGhsthingRoute';
+		$contentType['content_history_options'] = '{
+			"formFile":"administrator\/components\/com_ghsthing\/forms\/ghsthing.xml",
+			"hideFields":[
+				"asset_id",
+				"checked_out",
+				"checked_out_time",
+				"version"
+			],
+			"ignoreChanges":[
+				"modified_by",
+				"modified",
+				"checked_out",
+				"checked_out_time",
+				"version",
+				"ordering"
+			],
+			"convertToInt":[
+				"publish_up",
+				"publish_down",
+				"featured",
+				"ordering"
+			],
+			"displayLookup":[
+				{
+					"sourceColumn":"catid",
+					"targetTable":"#__categories",
+					"targetColumn":"id",
+					"displayColumn":"title"
+				},
+				{
+					"sourceColumn":"created_by",
+					"targetTable":"#__users",
+					"targetColumn":"id",
+					"displayColumn":"name"},
+				{
+					"sourceColumn":"access",
+					"targetTable":"#__viewlevels",
+					"targetColumn":"id",
+					"displayColumn":"title"
+				},
+				{
+					"sourceColumn":"modified_by",
+					"targetTable":"#__users",
+					"targetColumn":"id",
+					"displayColumn":"name"
+				}
+			]
+		}';
+		$typesTable->save($contentType);
 	}
 }
