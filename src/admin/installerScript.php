@@ -134,12 +134,12 @@ class com_ghsthingInstallerScript extends InstallerScript
 		$contentType['rules'] = '';
 		$contentType['field_mappings'] = '{
 			"common": {
-			  "core_content_item_id": "id",
-			  "core_title": "title",
-			  "core_alias": "alias",
+				"core_content_item_id": "id",
+				"core_title": "title",
+				"core_alias": "alias",
 				"core_body":"introtext",
-			  "core_state": "state",
-			  "core_catid": "catid",
+				"core_state": "state",
+				"core_catid": "catid",
 				"core_created_time":"created",
 				"core_modified_time":"modified",
 				"core_publish_up":"publish_up",
