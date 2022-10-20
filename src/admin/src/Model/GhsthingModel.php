@@ -4,10 +4,13 @@ namespace GHSVS\Component\GhsThing\Administrator\Model;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Versioning\VersionableModelTrait;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Helper\TagsHelper;
+use Joomla\Database\ParameterType;
 
 class GhsthingModel extends AdminModel
 {
@@ -108,10 +111,6 @@ class GhsthingModel extends AdminModel
 			$registry = new Registry($item->images);
 			$item->images = $registry->toArray();
 
-			// Convert the urls field to an array.
-			$registry = new Registry($item->urls);
-			$item->urls = $registry->toArray();
-
 			$item->articletext = ($item->fulltext !== null && trim($item->fulltext) != '') ? $item->introtext . '<hr id="system-readmore">' . $item->fulltext : $item->introtext;
 
 			if (!empty($item->id)) {
@@ -147,21 +146,30 @@ class GhsthingModel extends AdminModel
 	}
 
 	/**
-		* Prepare and sanitise the table data prior to saving.
-		*
-		* @param   \Joomla\CMS\Table\Table  $table  A Table object.
-		*
-		* @return  void
-		*
-		* @since   1.6
-		*/
-	protected function prepareTable($table)
+	* Method to get the data that should be injected in the form.
+	*
+	* @return  mixed  The data for the form.
+	*
+	* @since   1.6
+	*/
+	protected function loadFormData()
 	{
-		$table->version++;
+		$app = Factory::getApplication();
 
-		// Reorder within the category so the new article is first
-		if (empty($table->id)) {
-			$table->reorder('catid = ' . (int) $table->catid . ' AND state >= 0');
+		// Check the session for previously entered form data.
+		$data = $app->getUserState('com_ghsthing.edit.ghsthing.data', array());
+
+		if (empty($data)) {
+			$data = $this->getItem();
+
+			// Prime some default values.
+			if ($this->getState('ghsthing.id') == 0) {
+				$data->set('catid', $app->input->get('catid', $app->getUserState('com_ghsthing.ghsthings.filter.category_id'), 'int'));
+			}
 		}
+
+		$this->preprocessData('com_ghsthing.ghsthing', $data);
+
+		return $data;
 	}
 }
