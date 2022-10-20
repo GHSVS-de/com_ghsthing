@@ -32,11 +32,11 @@ return new class implements ServiceProviderInterface
 {
 	public function register(Container $container)
 	{
-
+		/*
+		- Im Normallfall lädt das der Application::dispatch() automatisch.
 		$app = Factory::getApplication();
 		$wa = $app->getDocument()->getWebAssetManager();
-		$wa->getRegistry()->addExtensionRegistryFile('com_ghsthing');
-
+		$wa->getRegistry()->addExtensionRegistryFile('com_ghsthing'); */
 
 		$ns = '\\GHSVS\\Component\\GhsThing';
 
