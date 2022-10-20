@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS `#__ghsthing`
 	`publish_up` datetime NULL DEFAULT NULL,
 	`publish_down` datetime NULL DEFAULT NULL,
 	`images` text NOT NULL,
-	`urls` text NOT NULL,
 	`params` text NOT NULL,
 	`version` int unsigned NOT NULL DEFAULT 1,
 	`ordering` int NOT NULL DEFAULT 0,
