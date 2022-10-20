@@ -146,4 +146,22 @@ class GhsthingModel extends AdminModel
 		return $item;
 	}
 
+	/**
+		* Prepare and sanitise the table data prior to saving.
+		*
+		* @param   \Joomla\CMS\Table\Table  $table  A Table object.
+		*
+		* @return  void
+		*
+		* @since   1.6
+		*/
+	protected function prepareTable($table)
+	{
+		$table->version++;
+
+		// Reorder within the category so the new article is first
+		if (empty($table->id)) {
+			$table->reorder('catid = ' . (int) $table->catid . ' AND state >= 0');
+		}
+	}
 }
