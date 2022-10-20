@@ -12,8 +12,8 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Installer\InstallerScript;
 use Joomla\CMS\Log\Log;
-//use Joomla\CMS\Table\ContentType;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
 
 class com_ghsthingInstallerScript extends InstallerScript
 {
@@ -33,8 +33,30 @@ class com_ghsthingInstallerScript extends InstallerScript
 	 */
 	protected $deleteFolders = [];
 
+	protected $dbDropColumns = [
+		'#__ghsthing' => [
+			'urls',
+		],
+	];
+
+	protected $logCat = 'com_ghsthing';
+	protected $db;
+
 	public function preflight($type, $parent)
 	{
+		$logOptions = [
+			'text_file' => $this->logCat . 'InstallerScriptLog.php',
+			'text_entry_format' => '{DATETIME}  {PRIORITY}  {MESSAGE}',
+		];
+		Log::addLogger($logOptions, Log::ALL, [$this->logCat]);
+
+		if (version_compare(JVERSION, '4', 'lt')) {
+			$this->db = Factory::getDbo();
+		} else {
+			$this->db = Factory::getContainer()->get('DatabaseDriver');
+		}
+		Log::add('$this->db: ' . get_class($this->db), Log::INFO, $this->logCat);
+
 		$manifest = @$parent->getManifest();
 
 		if ($manifest instanceof SimpleXMLElement)
@@ -47,6 +69,10 @@ class com_ghsthingInstallerScript extends InstallerScript
 				// Custom
 				$maximumPhp = trim((string) $manifest->maximumPhp);
 				$maximumJoomla = trim((string) $manifest->maximumJoomla);
+				$dbservertype = !empty($manifest->dbservertype)
+					&& trim((string) $manifest->dbservertype)
+					? trim((string) $manifest->dbservertype) : '';
+				$dbservertypes = array_filter(array_map("trim", explode(',', $dbservertype)));
 
 				$this->minimumPhp = $minimumPhp ? $minimumPhp : $this->minimumPhp;
 				$this->minimumJoomla = $minimumJoomla ? $minimumJoomla : $this->minimumJoomla;
@@ -54,15 +80,26 @@ class com_ghsthingInstallerScript extends InstallerScript
 				if ($maximumJoomla && version_compare(JVERSION, $maximumJoomla, '>'))
 				{
 					$msg = 'Your Joomla version (' . JVERSION . ') is too high for this extension. Maximum Joomla version is: ' . $maximumJoomla . '.';
-					Log::add($msg, Log::WARNING, 'jerror');
+					Log::add($msg, Log::ERROR, 'jerror');
 				}
 
 				// Check for the maximum PHP version before continuing
 				if ($maximumPhp && version_compare(PHP_VERSION, $maximumPhp, '>'))
 				{
 					$msg = 'Your PHP version (' . PHP_VERSION . ') is too high for this extension. Maximum PHP version is: ' . $maximumPhp . '.';
+					Log::add($msg, Log::ERROR, 'jerror');
+				}
 
-					Log::add($msg, Log::WARNING, 'jerror');
+				// Check for the maximum PHP version before continuing
+				if ($maximumPhp && version_compare(PHP_VERSION, $maximumPhp, '>'))
+				{
+					$msg = 'Your PHP version (' . PHP_VERSION . ') is too high for this extension. Maximum PHP version is: ' . $maximumPhp . '.';
+					Log::add($msg, Log::ERROR, 'jerror');
+				}
+
+				if ($dbservertypes && !in_array($this->db->getServerType(), $dbservertypes)) {
+					$msg = 'Your database server type "' . $this->db->getServerType() . '" is not supported by this extension. Allowed db server types: ' . implode(', ', $dbservertypes);
+					Log::add($msg, Log::ERROR, 'jerror');
 				}
 
 				if (isset($msg))
@@ -98,11 +135,35 @@ class com_ghsthingInstallerScript extends InstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
+		$this->saveContentTypes();
+
 		if ($type === 'update') {
 			$this->removeFiles();
+			$this->dbDropColumns();
 		}
+	}
 
-		$this->saveContentTypes();
+	private function dbDropColumns()
+	{
+		if (!empty($this->dbDropColumns))
+		{
+			foreach ($this->dbDropColumns as $table => $columns)
+			{
+				foreach ($columns as $column)
+				{
+					$query = 'ALTER IGNORE TABLE ' . $this->db->qn($table) . ' DROP '
+						. $this->db->qn($column);
+					$this->db->setQuery($query);
+
+					try {
+						$this->db->execute();
+						Log::add('dbDropColumns(): ' . $query, Log::INFO, $this->logCat);
+					} catch (\RuntimeException $e) {
+						Log::add('dbDropColumns(): ' . $query . '. ' . $e->getMessage(), Log::ERROR, $this->logCat);
+					}
+				}
+			}
+		}
 	}
 
 	private function saveContentTypes()
