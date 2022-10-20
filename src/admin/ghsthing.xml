@@ -53,6 +53,7 @@
 	den $source-Pfad falsch interprtiert als /admin/media/ statt /media/
 	-->
 	<media destination="com_ghsthing" folder="../media">
+		<filename>joomla.asset.json</filename>
 		<folder>css</folder>
 	</media>
 
