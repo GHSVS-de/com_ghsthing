@@ -50,6 +50,8 @@ class com_ghsthingInstallerScript extends InstallerScript
 		];
 		Log::addLogger($logOptions, Log::ALL, [$this->logCat]);
 
+		Log::add('Starting preflight(). $type: ' . $type, Log::INFO, $this->logCat);
+
 		if (version_compare(JVERSION, '4', 'lt')) {
 			$this->db = Factory::getDbo();
 		} else {
@@ -61,6 +63,8 @@ class com_ghsthingInstallerScript extends InstallerScript
 
 		if ($manifest instanceof SimpleXMLElement)
 		{
+			Log::add('preflight(). Starting Checks. Version: ' . (string) $manifest->id . '. $type: ' . $type, Log::INFO, $this->logCat);
+
 			if ($type === 'update' || $type === 'install' || $type === 'discover_install')
 			{
 				$minimumPhp = trim((string) $manifest->minimumPhp);
@@ -118,7 +122,7 @@ class com_ghsthingInstallerScript extends InstallerScript
 		{
 			return false;
 		}
-
+		Log::add('preflight() done successfully. $type: ' . $type, Log::INFO, $this->logCat);
 		return true;
 	}
 
@@ -135,18 +139,21 @@ class com_ghsthingInstallerScript extends InstallerScript
 	 */
 	public function postflight($type, $parent)
 	{
+		Log::add('Starting postflight(). $type: ' . $type, Log::INFO, $this->logCat);
 		$this->saveContentTypes();
 
 		if ($type === 'update') {
 			$this->removeFiles();
 			$this->dbDropColumns();
 		}
+		Log::add('postflight() done. $type: ' . $type, Log::INFO, $this->logCat);
 	}
 
 	private function dbDropColumns()
 	{
 		if (!empty($this->dbDropColumns))
 		{
+			Log::add('Starting dbDropColumns().', Log::INFO, $this->logCat);
 			foreach ($this->dbDropColumns as $table => $columns)
 			{
 				foreach ($columns as $column)
@@ -168,6 +175,7 @@ class com_ghsthingInstallerScript extends InstallerScript
 
 	private function saveContentTypes()
 	{
+		Log::add('Starting saveContentTypes().', Log::INFO, $this->logCat);
 		$contentType = [];
 		$contentType['type_alias'] = 'com_ghsthing.ghsthing';
 
@@ -274,5 +282,6 @@ class com_ghsthingInstallerScript extends InstallerScript
 			]
 		}';
 		$typesTable->save($contentType);
+		Log::add('saveContentTypes() done.', Log::INFO, $this->logCat);
 	}
 }
