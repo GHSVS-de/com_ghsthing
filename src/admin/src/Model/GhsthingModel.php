@@ -5,6 +5,7 @@ namespace GHSVS\Component\GhsThing\Administrator\Model;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Versioning\VersionableModelTrait;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
@@ -171,5 +172,32 @@ class GhsthingModel extends AdminModel
 		$this->preprocessData('com_ghsthing.ghsthing', $data);
 
 		return $data;
+	}
+
+	/**
+	* Prepare and sanitise the table prior to saving.
+	*
+	* @param   \Joomla\CMS\Table\Table  $table  The Table object
+	*
+	* @return  void
+	*
+	* @since   1.6
+	*/
+	protected function prepareTable($table)
+	{
+		$date = Factory::getDate()->toSql();
+		$table->title = htmlspecialchars_decode($table->title, ENT_QUOTES);
+		// Ist GhsthingTable::generateAlias()
+		$table->generateAlias();
+
+		if (empty($table->id)) {
+			$table->created = $date;
+			// Ist eine Core-Methode in Table. Neues Item mit höchstem ordering.
+			$table->reorder('catid = ' . (int) $table->catid . ' AND state >= 0');
+		} else {
+			$table->modified = $date;
+			$table->modified_by = Factory::getUser()->id;
+		}
+		$table->version++;
 	}
 }
