@@ -12,6 +12,8 @@ use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\Database\ParameterType;
+use Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
+use Joomla\CMS\Form\Form;
 
 class GhsthingModel extends AdminModel
 {
@@ -78,6 +80,18 @@ class GhsthingModel extends AdminModel
 		$this->event_after_change_featured  = $this->event_after_change_featured ?? 'onContentAfterChangeFeatured';
 	}
 
+	/**
+	* Is the user allowed to create an on the fly category?
+	*
+	* @return  boolean
+	*
+	* @since   3.6.1
+	*/
+	private function canCreateCategory()
+	{
+		return Factory::getUser()->authorise('core.create', 'com_ghsthing');
+	}
+
 	public function getForm($data = array(), $loadData = true)
 	{
 		$form = $this->loadForm('com_ghsthing.ghsthing', 'ghsthing', array('control' => 'jform', 'load_data' => $loadData));
@@ -99,16 +113,10 @@ class GhsthingModel extends AdminModel
 		*/
 	public function getItem($pk = null)
 	{
+		// parent::getItem() führt eine DB-Abfrage aus.
 		if ($item = parent::getItem($pk)) {
-			// Convert the params field to an array. Ist schon Array durch parent::.
-			//$registry = new Registry($item->params);
-			//$item->params = $registry->toArray();
-
-			// Convert the metadata field to an array.
 			$registry = new Registry($item->metadata);
 			$item->metadata = $registry->toArray();
-
-			// Convert the images field to an array.
 			$registry = new Registry($item->images);
 			$item->images = $registry->toArray();
 
@@ -169,9 +177,50 @@ class GhsthingModel extends AdminModel
 			}
 		}
 
+		// Ruft letztlich Plugin-Events. Der Core ruft onContentPrepareData.
 		$this->preprocessData('com_ghsthing.ghsthing', $data);
+		//Log::add('$data: ' . print_r($data, true) . PHP_EOL . ' in ' . __METHOD__ . PHP_EOL, Log::INFO, 'ComGhsthingLog');
 
 		return $data;
+	}
+
+	/*
+	Beim Laden der Edit-Form im Backend. Wohl nicht beim Speichern?
+	Parent ist in diesem Fall FormBehaviorTrait bzw. FormModel, das das Trait lädt.
+	Dort werden die Plugins der $group getriggert.
+	$data-Objekt kann aber hier auch direkt manipuliert werden oder eigene Plugin-Trigger.
+	$data: Joomla\CMS\Object\CMSObject Object
+	*/
+	protected function preprocessData($context, &$data, $group = 'ghsthing')
+	{
+		$data->ghstest = 'ghstest';
+		/* PluginHelper::importPlugin($group);
+		Factory::getApplication()->triggerEvent('onGhsthingPrepareData', array($context, &$data)); */
+
+		// Das hat als default $group = 'content'.
+		parent::preprocessData($context, $data);
+	}
+
+	/**
+	* Allows preprocessing of the Form object.
+	*
+	* @param   Form    $form   The form object
+	* @param   array   $data   The data to be merged into the form object
+	* @param   string  $group  The plugin group to be executed
+	*
+	* @return  void
+	*
+	* @since   3.0
+	*/
+	protected function preprocessForm(Form $form, $data, $group = 'content')
+	{
+		// Muss in eigener save() abgehandelt werden.
+		if ($this->canCreateCategory()) {
+			$form->setFieldAttribute('catid', 'allowAdd', 'true');
+			$form->setFieldAttribute('catid', 'customPrefix', '#new#');
+		}
+
+		parent::preprocessForm($form, $data, $group);
 	}
 
 	/**
@@ -199,5 +248,68 @@ class GhsthingModel extends AdminModel
 			$table->modified_by = Factory::getUser()->id;
 		}
 		$table->version++;
+	}
+
+
+	/**
+	* Method to save the form data.
+	*
+	* @param   array  $data  The form data.
+	*
+	* @return  boolean  True on success.
+	*
+	* @since   1.6
+	*/
+	public function save($data)
+	{
+		$app = Factory::getApplication();
+		$input = $app->input;
+
+		if (isset($data['images']) && is_array($data['images'])) {
+			$registry = new Registry($data['images']);
+			$data['images'] = (string) $registry;
+		}
+
+		$createCategory = true;
+
+		if (is_null($data['catid'])) {
+			$createCategory = false;
+		}
+
+		if (is_numeric($data['catid']) && $data['catid']) {
+			$createCategory = !CategoriesHelper::validateCategoryId($data['catid'],
+				'com_ghsthing');
+		}
+
+		if ($createCategory && $this->canCreateCategory()) {
+			$category = [
+				// Remove #new# prefix, if exists. See preprocessForm().
+				'title' => strpos($data['catid'], '#new#') === 0
+					? substr($data['catid'], 5) : $data['catid'],
+				'parent_id' => 1,
+				'extension' => 'com_ghsthing',
+				'language'  => $data['language'],
+				'published' => 1,
+			];
+
+			/** @var \Joomla\Component\Categories\Administrator\Model\CategoryModel $categoryModel */
+			$categoryModel = Factory::getApplication()->bootComponent('com_categories')
+			->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
+
+			// Create new category.
+			if (!$categoryModel->save($category)) {
+				$this->setError($categoryModel->getError());
+
+				return false;
+			}
+
+			$data['catid'] = $categoryModel->getState('category.id');
+		}
+
+		if (parent::save($data)) {
+			return true;
+		}
+
+		return false;
 	}
 }
