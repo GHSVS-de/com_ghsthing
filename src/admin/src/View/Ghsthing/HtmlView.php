@@ -5,6 +5,8 @@ namespace GHSVS\Component\GhsThing\Administrator\View\Ghsthing;
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Language\Text;
 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -17,6 +19,7 @@ class HtmlView extends BaseHtmlView
 
 	public function display($tpl = null)
 	{
+		$this->state = $this->get('State');
 		$this->form = $this->get('Form');
 		$this->item = $this->get('Item');
 		$this->addToolBar();
@@ -29,5 +32,13 @@ class HtmlView extends BaseHtmlView
 		ToolbarHelper::apply('ghsthing.apply');
 		ToolbarHelper::save('ghsthing.save');
 		ToolbarHelper::cancel('ghsthing.cancel', 'JTOOLBAR_CLOSE');
+
+		// ToDo. Development-Krücke!
+		$itemEditable = 1;
+
+		if (ComponentHelper::isEnabled('com_contenthistory')
+			&& $this->state->params->get('save_history', 1) && $itemEditable) {
+				ToolbarHelper::versions('com_ghsthing.ghsthing', $this->item->id);
+		}
 	}
 }
