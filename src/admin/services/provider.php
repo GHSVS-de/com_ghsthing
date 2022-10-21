@@ -4,6 +4,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Log\Log;
 
 use Joomla\CMS\Categories\CategoryFactoryInterface;
 use Joomla\CMS\Extension\Service\Provider\CategoryFactory;
@@ -32,6 +33,16 @@ return new class implements ServiceProviderInterface
 {
 	public function register(Container $container)
 	{
+
+		$logOptions = [
+			'text_file' => 'ComGhsthingLog.php',
+			'text_entry_format' => '{DATETIME}  {PRIORITY}  {MESSAGE}',
+		];
+		Log::addLogger($logOptions, Log::ALL, ['ComGhsthingLog']);
+
+		//Log::add('Logger ComGhsthingLog initialized. File: ' . __METHOD__, Log::INFO, 'ComGhsthingLog');
+
+
 		/*
 		- Im Normallfall lädt das der Application::dispatch() automatisch.
 		$app = Factory::getApplication();
