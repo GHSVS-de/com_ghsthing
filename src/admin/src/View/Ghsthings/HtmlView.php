@@ -5,6 +5,8 @@ namespace GHSVS\Component\GhsThing\Administrator\View\Ghsthings;
 
 defined('_JEXEC') or die;
 
+use GHSVS\Component\GhsThing\Administrator\Traits\MY_CON;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
@@ -13,8 +15,11 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
+
+
 class HtmlView extends BaseHtmlView
 {
+	use MY_CON;
 	/**
 		* An array of items
 		*
@@ -24,12 +29,11 @@ class HtmlView extends BaseHtmlView
 
 	public function display($tpl = null)
 	{
+		$this->init_MY_CON();
+		$this->filterForm    = $this->get('FilterForm');
 		$this->items = $this->get('Items');
 		$this->state = $this->get('State');
 		$this->addToolbar();
-
-
-
 		parent::display($tpl);
 	}
 
