@@ -9,6 +9,7 @@ use Joomla\CMS\Language\Text;
 
 $wa = $this->document->getWebAssetManager();
 $wa->useStyle('com_ghsthing.css.backend');
+$wa->useStyle('com_ghsthing.css.backend-edit');
 $wa->useScript('keepalive');
 $wa->useScript('form.validate');
 ?>

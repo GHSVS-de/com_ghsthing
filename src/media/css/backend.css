@@ -1,4 +1,4 @@
-.control-group
+.italic
 {
-	flex-direction: column;
+	font-style: italic;
 }

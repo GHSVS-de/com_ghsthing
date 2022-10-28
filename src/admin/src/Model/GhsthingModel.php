@@ -14,6 +14,9 @@ use Joomla\CMS\Helper\TagsHelper;
 use Joomla\Database\ParameterType;
 use Joomla\Component\Categories\Administrator\Helper\CategoriesHelper;
 use Joomla\CMS\Form\Form;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Event\AbstractEvent;
 
 class GhsthingModel extends AdminModel
 {
@@ -63,13 +66,17 @@ class GhsthingModel extends AdminModel
 		*/
 	public function __construct($config = array(), MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
 	{
-		/* NOCH UNKLAR. V.a. das 'content':
+		/*
+		NOCH UNKLAR. V.a. das 'content'.
+		Antwort: content ist der Plugin-Ordner. plugins/content. featured der Pluginname, was es im Core aber
+		gar nicht gibt.
+		*/
 		$config['events_map'] = $config['events_map'] ?? [];
 
 		$config['events_map'] = array_merge(
 				['featured' => 'content'],
 				$config['events_map']
-		); */
+		);
 
 		parent::__construct($config, $factory, $formFactory);
 
@@ -102,6 +109,184 @@ class GhsthingModel extends AdminModel
 		}
 
 		return $form;
+	}
+
+	/**
+		* Method to toggle the featured setting of articles.
+		*
+		* @param   array        $pks           The ids of the items to toggle.
+		* @param   integer      $value         The value to toggle to.
+		* @param   string|Date  $featuredUp    The date which item featured up.
+		* @param   string|Date  $featuredDown  The date which item featured down.
+		*
+		* @return  boolean  True on success.
+		*/
+	public function featured($pks, $value = 0, $featuredUp = null, $featuredDown = null)
+	{
+		$pks = (array) $pks;
+		$pks = array_filter(ArrayHelper::toInteger($pks));
+		$value = (int) $value;
+		$context = $this->option . '.' . $this->name;
+
+		// Letztlich importPlugin('content')  im Ordner 'content'.
+		PluginHelper::importPlugin($this->events_map['featured']);
+
+		if ($featuredUp === '') {
+			$featuredUp = null;
+		}
+
+		if ($featuredDown === '') {
+			$featuredDown = null;
+		}
+
+		if (empty($pks)) {
+			$this->setError(Text::_('JERROR_NO_ITEMS_SELECTED'));
+
+			return false;
+		}
+
+		/*
+		Macht er richtig. Auch ohne eigene getTable().
+		GHSVS\Component\GhsThing\Administrator\Table\FeaturedTable
+		*/
+		$table = $this->getTable('Featured', 'Administrator');
+		Log::add(get_class($table) . PHP_EOL . ' in ' . __METHOD__, Log::INFO,
+			'ComGhsthingLog');
+		#echo ' 4654sd48sa7d98sD81s8d71dsa <pre>' . print_r(get_object_vars($table), true) . '</pre>';exit;
+		#echo ' 4654sd48sa7d98sD81s8d71dsa <pre>' . print_r(get_object_vars($this), true) . '</pre>';exit;
+
+		$eventClass = 'GHSVS\Component\GhsThing\Administrator\Event\Model\FeatureEvent';
+
+		/*
+		Trigger the before change featured event.
+		onContentBeforeChangeFeatured.
+		Komplett komplizierter Bullshit im Vergleich zu früher.
+		Wohl wegen Workflow(???)
+		*/
+		$eventResult = Factory::getApplication()->getDispatcher()->dispatch(
+			$this->event_before_change_featured,
+			AbstractEvent::create(
+				$this->event_before_change_featured,
+				[
+					'eventClass' => $eventClass,
+					'subject'    => $this,
+					'extension'  => $context,
+					'pks'        => $pks,
+					'value'      => $value,
+				]
+			)
+		);
+
+		if ($eventResult->getArgument('abort', false)) {
+			$this->setError(Text::_($eventResult->getArgument('abortReason')));
+			return false;
+		}
+
+		$tableFeatured = '#__ghsthing_frontpage';
+
+		try {
+			$db = $this->getDatabase();
+			$query = $db->getQuery(true)
+				->update($db->quoteName('#__ghsthing'))
+				->set($db->quoteName('featured') . ' = :featured')
+				->whereIn($db->quoteName('id'), $pks)
+				->bind(':featured', $value, ParameterType::INTEGER);
+			$db->setQuery($query);
+			$db->execute();
+
+			if ($value === 0) {
+				// Clear the existing featured entries.
+				$query = $db->getQuery(true)
+					->delete($db->quoteName($tableFeatured))
+					->whereIn($db->quoteName('content_id'), $pks);
+				$db->setQuery($query);
+				$db->execute();
+			} else {
+				// First, we find out which of our new featured items are already featured.
+				$query = $db->getQuery(true)
+					->select($db->quoteName('content_id'))
+					->from($db->quoteName($tableFeatured))
+					->whereIn($db->quoteName('content_id'), $pks);
+				$db->setQuery($query);
+				$oldFeatured = $db->loadColumn();
+
+				if (count($oldFeatured)) {
+					$query = $db->getQuery(true)
+						->update($db->quoteName($tableFeatured))
+						->set(
+							[
+								$db->quoteName('featured_up') . ' = :featuredUp',
+								$db->quoteName('featured_down') . ' = :featuredDown',
+							]
+						)
+						->whereIn($db->quoteName('content_id'), $oldFeatured)
+						->bind(':featuredUp', $featuredUp,
+							$featuredUp ? ParameterType::STRING : ParameterType::NULL)
+						->bind(':featuredDown', $featuredDown,
+							$featuredDown ? ParameterType::STRING : ParameterType::NULL);
+					$db->setQuery($query);
+					$db->execute();
+				}
+
+				// We diff the arrays to get a list of the items that are newly featured
+				$newFeatured = array_diff($pks, $oldFeatured);
+
+				if ($newFeatured) {
+					$query = $db->getQuery(true)
+						->insert($db->quoteName($tableFeatured))
+						->columns(
+							[
+								$db->quoteName('content_id'),
+								$db->quoteName('ordering'),
+								$db->quoteName('featured_up'),
+								$db->quoteName('featured_down'),
+							]
+						);
+
+					$dataTypes = [
+						ParameterType::INTEGER,
+						ParameterType::INTEGER,
+						$featuredUp ? ParameterType::STRING : ParameterType::NULL,
+						$featuredDown ? ParameterType::STRING : ParameterType::NULL,
+					];
+
+					foreach ($newFeatured as $pk) {
+						$query->values(implode(',',
+							$query->bindArray(
+								[$pk, 0, $featuredUp, $featuredDown],
+								$dataTypes
+							)
+						));
+					}
+
+					$db->setQuery($query);
+					$db->execute();
+				}
+			}
+		} catch (\Exception $e) {
+			$this->setError($e->getMessage());
+			return false;
+		}
+		$table->reorder();
+
+		Factory::getApplication()->getDispatcher()->dispatch(
+			$this->event_after_change_featured,
+			AbstractEvent::create(
+				$this->event_after_change_featured,
+				[
+					'eventClass' => $eventClass,
+					'subject'    => $this,
+					'extension'  => $context,
+					'pks'        => $pks,
+					'value'      => $value,
+				]
+			)
+		);
+
+		// Ohne eigene cleanCache() wird aller Cache gelöscht.
+		// $this->cleanCache();
+
+		return true;
 	}
 
 	/**
@@ -249,7 +434,6 @@ class GhsthingModel extends AdminModel
 		}
 		$table->version++;
 	}
-
 
 	/**
 	* Method to save the form data.

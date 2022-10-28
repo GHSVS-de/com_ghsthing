@@ -15,8 +15,6 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
-
-
 class HtmlView extends BaseHtmlView
 {
 	use MY_CON;
@@ -27,12 +25,51 @@ class HtmlView extends BaseHtmlView
 		*/
 	protected $items;
 
+	/**
+		* The pagination object
+		*
+		* @var  \Joomla\CMS\Pagination\Pagination
+		*/
+	protected $pagination;
+
+	/**
+		* The model state
+		*
+		* @var   \Joomla\CMS\Object\CMSObject
+		*/
+	protected $state;
+
+	/**
+		* Form object for search filters
+		*
+		* @var  \Joomla\CMS\Form\Form
+		*/
+	public $filterForm;
+
+	/**
+		* The active search filters
+		*
+		* @var  array
+		*/
+	public $activeFilters;
+
 	public function display($tpl = null)
 	{
+		// Trait things for Layouts.
 		$this->init_MY_CON();
-		$this->filterForm    = $this->get('FilterForm');
+
 		$this->items = $this->get('Items');
+		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
+		$this->filterForm    = $this->get('FilterForm');
+
+		// Kümmert sich, ob Searchtools eingeblendet bleiben oder nicht.
+		$this->activeFilters = $this->get('ActiveFilters');
+
+		// Gibt die Möglichkeit, das Verhalten via z.B.
+		//unset($this->activeFilters['language']);
+		// zu deaktivieren
+
 		$this->addToolbar();
 		parent::display($tpl);
 	}
@@ -87,7 +124,7 @@ class HtmlView extends BaseHtmlView
 							$childBar->checkin('ghsthings.checkin')->listCheck(true);
 					}
 
-					if ($this->state->get('filter.published') != -2) {
+					if ($this->state->get('filter.state') != -2) {
 							$childBar->trash('ghsthings.trash')->listCheck(true);
 					}
 
@@ -104,7 +141,7 @@ class HtmlView extends BaseHtmlView
 					}
 			}
 
-			if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete')) {
+			if ($this->state->get('filter.state') == -2 && $canDo->get('core.delete')) {
 					$toolbar->delete('ghsthings.delete')
 							->text('JTOOLBAR_EMPTY_TRASH')
 							->message('JGLOBAL_CONFIRM_DELETE')

@@ -49,6 +49,9 @@ class GhsthingTable extends Table implements VersionableTableInterface, Taggable
 		$this->typeAlias = 'com_ghsthing.ghsthing';
 		parent::__construct('#__ghsthing', 'id', $db);
 		// $this->setColumnAlias('title', 'name');
+
+		// Wichtig z.B. bei Klick auf publish buttons in Listen-View.
+		$this->setColumnAlias('published', 'state');
 	}
 
 	public function bind($array, $ignore = '')

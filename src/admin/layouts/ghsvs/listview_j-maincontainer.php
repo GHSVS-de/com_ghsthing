@@ -14,7 +14,7 @@ if ($startEnd === 'start') { ?>
 		<?php echo LayoutHelper::render('joomla.searchtools.default',
 			['view' => $displayData['view']]);?>
 
-			<?php if ($displayData['itemsEmpty'] === true) { ?>
+			<?php if ($displayData['hasItems'] === false) { ?>
 			<div class="alert alert-info">
 				<span class="icon-info-circle" aria-hidden="true"></span>
 				<span class="visually-hidden"><?php echo Text::_('INFO'); ?></span>
