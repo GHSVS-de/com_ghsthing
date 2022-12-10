@@ -4,6 +4,8 @@ namespace GHSVS\Component\GhsThing\Administrator\Model;
 
 defined('_JEXEC') or die;
 
+use GHSVS\Component\GhsThing\Administrator\Traits\MY_CON;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -21,6 +23,7 @@ use Joomla\CMS\Event\AbstractEvent;
 class GhsthingModel extends AdminModel
 {
 	use VersionableModelTrait;
+	use MY_CON;
 
 	/**
 		* The prefix to use with controller messages.
@@ -85,6 +88,9 @@ class GhsthingModel extends AdminModel
 		$this->event_before_change_featured = $this->event_before_change_featured ?? 'onContentBeforeChangeFeatured';
 		$this->event_after_change_featured  = $config['event_after_change_featured'] ?? $this->event_after_change_featured;
 		$this->event_after_change_featured  = $this->event_after_change_featured ?? 'onContentAfterChangeFeatured';
+
+		// Trait things.
+		$this->init_MY_CON();
 	}
 
 	/**
@@ -99,8 +105,28 @@ class GhsthingModel extends AdminModel
 		return Factory::getUser()->authorise('core.create', 'com_ghsthing');
 	}
 
-	public function getForm($data = array(), $loadData = true)
+	protected function canEditState($record)
 	{
+		//$user = Factory::getApplication()->getIdentity();
+		$user = $this->getCurrentUser();
+
+		if (!empty($record->id)) {
+			return $user->authorise('core.edit.state', 'com_ghsthing.ghsthing.'
+				. (int) $record->id);
+		}
+
+		if (!empty($record->catid)) {
+			return $user->authorise('core.edit.state', 'com_ghsthing.category.'
+				. (int) $record->catid);
+		}
+
+		return parent::canEditState($record);
+	}
+
+	public function getForm($data = [], $loadData = true)
+	{
+		$app = Factory::getApplication();
+
 		$form = $this->loadForm('com_ghsthing.ghsthing', 'ghsthing', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form))
@@ -108,11 +134,90 @@ class GhsthingModel extends AdminModel
 			return false;
 		}
 
+		$record = new \stdClass();
+		$itemIdFromInput = $app->isClient('site')
+			? $app->input->getInt('a_id', 0)
+			: $app->input->getInt('id', 0);
+
+		// On edit ID from state. On save, data from input
+		$id = (int) $this->getState('ghsthing.id', $itemIdFromInput);
+		$record->id = $id;
+
+		// Absolut keine Ahnung, was der folgende Scheiß soll.
+
+		// For new items we load the potential state + associations
+		if ($id == 0 && $formField = $form->getField('catid')) {
+			$assignedCatids = $data['catid'] ?? $form->getValue('catid');
+			$assignedCatids = is_array($assignedCatids)
+				? (int) reset($assignedCatids)
+				: (int) $assignedCatids;
+
+			// Try to get the category from the category field
+			if (empty($assignedCatids)) {
+				$assignedCatids = $formField->getAttribute('default', null);
+
+				if (!$assignedCatids) {
+					// Choose the first category available
+					$catOptions = $formField->options;
+
+					if ($catOptions && !empty($catOptions[0]->value)) {
+						$assignedCatids = (int) $catOptions[0]->value;
+					}
+				}
+			}
+
+			// Activate the reload of the form when category is changed
+			$form->setFieldAttribute('catid', 'refresh-enabled', true);
+			$form->setFieldAttribute('catid', 'refresh-cat-id', $assignedCatids);
+			$form->setFieldAttribute('catid', 'refresh-section', 'ghsthing');
+
+			// Store ID of the category uses for edit state permission check
+			$record->catid = $assignedCatids;
+		} else {
+			if (!empty($data['catid'])) {
+				$catId = (int) $data['catid'];
+			} else {
+				$catIds = $form->getValue('catid');
+				$catId = is_array($catIds) ? (int) reset($catIds) : (int) $catIds;
+
+				if (!$catId) {
+					$catId = (int) $form->getFieldAttribute('catid', 'default', 0);
+				}
+			}
+
+			$record->catid = $catId;
+		}
+
+		// Modify the form based on Edit State access controls.
+		if (!$this->canEditState($record)) {
+			// Disable fields for display.
+			$form->setFieldAttribute('featured', 'disabled', 'true');
+			$form->setFieldAttribute('featured_up', 'disabled', 'true');
+			$form->setFieldAttribute('featured_down', 'disabled', 'true');
+			$form->setFieldAttribute('ordering', 'disabled', 'true');
+			$form->setFieldAttribute('publish_up', 'disabled', 'true');
+			$form->setFieldAttribute('publish_down', 'disabled', 'true');
+			$form->setFieldAttribute('state', 'disabled', 'true');
+
+			// Disable fields while saving.
+			// The controller has already verified this is an item you can edit.
+			$form->setFieldAttribute('featured', 'filter', 'unset');
+			$form->setFieldAttribute('featured_up', 'filter', 'unset');
+			$form->setFieldAttribute('featured_down', 'filter', 'unset');
+			$form->setFieldAttribute('ordering', 'filter', 'unset');
+			$form->setFieldAttribute('publish_up', 'filter', 'unset');
+			$form->setFieldAttribute('publish_down', 'filter', 'unset');
+			$form->setFieldAttribute('state', 'filter', 'unset');
+		}
+
+		if (!Factory::getUser()->authorise('core.manage', 'com_users')) {
+			$form->setFieldAttribute('created_by', 'filter', 'unset');
+		}
 		return $form;
 	}
 
 	/**
-		* Method to toggle the featured setting of articles.
+		* Method to toggle the featured setting of items and to save featured_up and featured_down.
 		*
 		* @param   array        $pks           The ids of the items to toggle.
 		* @param   integer      $value         The value to toggle to.
@@ -305,7 +410,9 @@ class GhsthingModel extends AdminModel
 			$registry = new Registry($item->images);
 			$item->images = $registry->toArray();
 
-			$item->articletext = ($item->fulltext !== null && trim($item->fulltext) != '') ? $item->introtext . '<hr id="system-readmore">' . $item->fulltext : $item->introtext;
+			$item->articletext = ($item->fulltext !== null && trim($item->fulltext) !== '')
+				? $item->introtext . '<hr id="system-readmore">' . $item->fulltext
+				: $item->introtext;
 
 			if (!empty($item->id)) {
 				$item->tags = new TagsHelper();
@@ -323,8 +430,8 @@ class GhsthingModel extends AdminModel
 							$db->quoteName('featured_down'),
 						]
 					)
-					->from($db->quoteName('#__ghsthing_frontpage'))
-					->where($db->quoteName('ghsthing_id') . ' = :id')
+					->from($db->quoteName($this->MY_CON->tableFeatured))
+					->where($db->quoteName('content_id') . ' = :id')
 					->bind(':id', $item->id, ParameterType::INTEGER);
 
 					$featured = $db->setQuery($query)->loadObject();
@@ -491,6 +598,16 @@ class GhsthingModel extends AdminModel
 		}
 
 		if (parent::save($data)) {
+			// Hier wird featured_up featured_down gespeichert, damit beim nächsten Editaufruf immer noch da oder gelöscht.
+			// $this->featured() ist die Methode in diesem Model, die das abwickelt.
+			if (isset($data['featured'])) {
+				if (!$this->featured($this->getState($this->getName() . '.id'),
+					$data['featured'], $data['featured_up'] ?? null, $data['featured_down'] ?? null)
+				) {
+					return false;
+				}
+			}
+
 			return true;
 		}
 

@@ -1,0 +1,25 @@
+{
+  "name": "com_ghsthing_fields.json",
+  "version": "{{version}}",
+  "description": "Ermöglicht das Umsortieren, Ändern von Feldern in Edit-Formularen.",
+	"description2": "z.B. dem Layout joomla.edit.publishingdata kann man ein $this->fields übergeben.",
+	"ghsthing.edit": {
+		"publishingdata": {
+			"fields": [
+				"id",
+				"version",
+				"created",
+				"publish_up",
+				"publish_down",
+				"featured_up",
+				"featured_down",
+				"modified",
+				"created_by",
+				"modified_by"
+			],
+			"hidden_fields": [
+				"publish_upnureinTest"
+			]
+		}
+	}
+}

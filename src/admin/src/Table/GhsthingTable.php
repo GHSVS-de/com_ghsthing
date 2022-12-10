@@ -22,7 +22,7 @@ use Joomla\CMS\Tag\TaggableTableTrait;
 use Joomla\CMS\Versioning\VersionableTableInterface;
 use Joomla\Database\DatabaseDriver;
 use Joomla\String\StringHelper;
-
+use Joomla\Registry\Registry;
 
 class GhsthingTable extends Table implements VersionableTableInterface, TaggableTableInterface
 {

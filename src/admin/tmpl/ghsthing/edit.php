@@ -6,20 +6,32 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
+
+// Shortcut for constants from trait MY_CON.php
+$C = $this->MY_CON;
 
 $wa = $this->document->getWebAssetManager();
-$wa->useStyle('com_ghsthing.css.backend');
-$wa->useStyle('com_ghsthing.css.backend-edit');
-$wa->useScript('keepalive');
-$wa->useScript('form.validate');
+$wa->useStyle($C->option . '.css.backend');
+$wa->useStyle($C->option . '.css.backend-edit');
+$wa->getRegistry()->addExtensionRegistryFile('com_contenthistory');
+$wa->useScript('keepalive')
+    ->useScript('form.validate')
+    ->useScript('com_contenthistory.admin-history-versions');
+
+// Create shortcut to parameters.
+$params = clone $this->state->get('params');
+$params->merge(new Registry($this->item->params));
 ?>
-<form action="<?php echo Route::_('index.php?option=com_ghsthing&layout=edit&id=' . (int) $this->item->id); ?>"
-  method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="<?php echo Route::_('index.php?option=' . $C->option
+	. '&layout=edit&id=' . (int) $this->item->id); ?>"
+	method="post" name="adminForm" id="item-form" class="form-validate">
 
     <?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
 		<div class="main-card">
-			<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab', array('active' => 'details', 'recall' => true, 'breakpoint' => 768)); ?>
+			<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab',
+				['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
 
 
 				<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', empty($this->item->id) ? Text::_('COM_CONTACT_NEW_CONTACT') : Text::_('COM_GHSTHING')); ?>
@@ -37,12 +49,47 @@ $wa->useScript('form.validate');
 				</div>
 				<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
+<?php if ($params->get('show_publishing_options', 1) == 1) : ?>
+	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publishing',
+		Text::_('JGLOBAL_FIELDSET_PUBLISHING')); ?>
+		<div class="row">
+			<div class="col-12 col-lg-12">
+				<fieldset id="fieldset-publishingdata" class="options-form">
+					<legend><?php echo Text::_('JGLOBAL_FIELDSET_PUBLISHING'); ?></legend>
+					<div>
+						<?php
+						$fieldsSafe = $this->fields;
+						$hiddenfieldsSafe = $this->hidden_fields;
+						$this->MY_CONsetFields('ghsthing.edit|publishingdata', $this);
+						echo LayoutHelper::render('joomla.edit.publishingdata', $this);
+						$this->fields = $fieldsSafe;
+						$this->hidden_fields = $hiddenfieldsSafe;
+						?>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
+	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'metadata',
+		Text::_('JGLOBAL_FIELDSET_METADATA_OPTIONS')); ?>
+		<div class="row">
+			<div class="col-12 col-lg-6">
+				<fieldset id="fieldset-metadata" class="options-form">
+				<legend><?php echo Text::_('JGLOBAL_FIELDSET_METADATA_OPTIONS'); ?></legend>
+					<div>
+						<?php echo LayoutHelper::render('joomla.edit.metadata', $this); ?>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	<?php echo HTMLHelper::_('uitab.endTab'); ?>
+<?php endif; ?>
 
 
 			<?php echo HTMLHelper::_('uitab.endTabSet'); ?>
 		</div><!--/main-card-->
 
-    <input type="hidden" name="task" value="ghsthing.edit" />
+    <input type="hidden" name="task" value="<?php echo $C->vSingle; ?>.edit" />
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>

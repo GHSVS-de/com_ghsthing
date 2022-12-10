@@ -51,44 +51,54 @@ if ($hasItems === true)
 		<span id="filteredBy"><?php echo Text::_('JGLOBAL_FILTERED_BY'); ?></span>
 	</caption>
 	<thead>
-		<td class="w-1 text-center">
+
+<!--CHECKBOXES-->
+		<td class="text-center">
 			<?php echo HTMLHelper::_('grid.checkall'); ?>
 		</td>
 
-		<th scope="col" class="w-1 text-center d-none d-md-table-cell">
+<!--ORDERING-->
+		<th scope="col" class="text-center d-none d-md-table-cell">
 			<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ORDERING',
 				'a.ordering', $listDirn, $listOrder, null, 'asc'); ?>
 		</th>
 
+<!--TITLE, ALIAS, NOTE-->
 		<th scope="col" class="th4title">
 			<?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title',
 				$listDirn, $listOrder); ?>
 		</th>
 
-		<th scope="col" class="w-1 text-center d-none d-md-table-cell">
+		<th scope="col" class="d-none d-md-table-cell">
 			<?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state',
 				$listDirn, $listOrder); ?>
 		</th>
 
-		<th scope="col" class="w-1 text-center d-none d-md-table-cell">
+		<th scope="col" class="d-none d-md-table-cell">
 			<?php echo HTMLHelper::_('searchtools.sort', 'JFEATURED', 'a.featured',
 				$listDirn, $listOrder); ?>
 		</th>
 
-		<th scope="col" class="w-10 d-none d-md-table-cell">
+		<th scope="col" class="th4category">
+			<?php echo HTMLHelper::_('searchtools.sort', 'JCATEGORY', 'category_title',
+				$listDirn, $listOrder); ?>
+		</th>
+
+		<th scope="col" class="d-none d-md-table-cell">
 			<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access',
 				$listDirn, $listOrder); ?>
 		</th>
-		<th scope="col" class="w-10 d-none d-md-table-cell">
+
+		<th scope="col" class=" d-none d-md-table-cell">
 			<?php echo HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'a.created_by',
 				$listDirn, $listOrder); ?>
 		</th>
-		<th scope="col" class="w-10 d-none d-md-table-cell text-center">
+		<th scope="col" class="d-none d-md-table-cell text-center">
 			<?php echo HTMLHelper::_('searchtools.sort',
 				'GHSVS_' . strtoupper($dateOrderingColumn), 'a.' . $dateOrderingColumn,
 				$listDirn, $listOrder); ?>
 		</th>
-		<th scope="col" class="w-3 d-none d-lg-table-cell">
+		<th scope="col" class="d-none d-lg-table-cell">
 			<?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id',
 				$listDirn, $listOrder); ?>
 		</th>
@@ -101,11 +111,13 @@ if ($hasItems === true)
 			?>
 <tr class="row<?php echo $i % 2; ?>" data-draggable-group="<?php echo $item->catid; ?>">
 
+<!--CHECKBOXES-->
 	<td class="text-center">
 		<?php echo HTMLHelper::_('grid.id', $i, $item->id, false, 'cid', 'cb',
 			$item->title); ?>
 	</td>
 
+<!--ORDERING-->
 	<td class="text-center d-none d-md-table-cell">
 		<?php
 			$iconClass = '';
@@ -128,6 +140,7 @@ if ($hasItems === true)
 		<?php } ?>
 	</td>
 
+<!--TITLE, ALIAS, NOTE-->
 	<td>
 		<?php echo $item->UCheckedoutButton; ?>
 
@@ -147,10 +160,6 @@ if ($hasItems === true)
 		<?php
 		} ?>
 
-		<div class=alert-warning>
-			<?php	echo $this->getCatInfo($item); ?>
-		</div>
-
 		<div>
 			<?php
 			echo '<span class=italic>' . Text::sprintf('JFIELD_ALIAS_LABEL')
@@ -163,12 +172,18 @@ if ($hasItems === true)
 		</div>
 	</td>
 
-	<td class="<?php echo $C->vSingle; ?>-status text-center">
+<!--STATE-->
+	<td class="<?php echo $C->vSingle; ?>-status">
 		<?php echo $item->UPublishedButton; ?>
 	</td>
 
-	<td class="text-center d-none d-md-table-cell">
+<!--FEATURED-->
+	<td class="d-none d-md-table-cell">
 		<?php echo $item->UFeaturedButton; ?>
+	</td>
+
+	<td class="d-none d-md-table-cell">
+		<?php	echo $this->getCatInfo($item); ?>
 	</td>
 
 	<td class="d-none d-md-table-cell">
@@ -179,7 +194,7 @@ if ($hasItems === true)
 		<?php echo $this->escape($item->author_name); ?>
 	</td>
 
-	<td class="d-none d-md-table-cell text-center">
+	<td class="d-none d-md-table-cell">
 		<?php
 		$date = $item->{$dateOrderingColumn};
 		echo $date > 0 ? HTMLHelper::_('date', $date, Text::_('DATE_FORMAT_LC6')) : '-';

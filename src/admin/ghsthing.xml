@@ -18,7 +18,7 @@
 	<scriptfile>installerScript.php</scriptfile>
 	<minimumPhp>7.4.0</minimumPhp>
 	<maximumPhp>8.99999.99999</maximumPhp>
-	<minimumJoomla>4.0.0</minimumJoomla>
+	<minimumJoomla>4.2.5</minimumJoomla>
 	<maximumJoomla>4.9999.9999</maximumJoomla>
 	<allowDowngrades>1</allowDowngrades>
 	<dbservertype>mysql</dbservertype>

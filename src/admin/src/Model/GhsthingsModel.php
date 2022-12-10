@@ -84,7 +84,7 @@ class GhsthingsModel extends ListModel
 	*
 	* @since   1.6
 	*/
-	protected function populateState($ordering = 'a.title', $direction = 'asc')
+	protected function populateState($ordering = 'a.id', $direction = 'desc')
 	{
 		$app = Factory::getApplication();
 
@@ -149,7 +149,10 @@ class GhsthingsModel extends ListModel
 		$C = $this->MY_CON;
 		$db = $this->getDatabase();
 		$query = $db->getQuery(true);
-		$user = Factory::getApplication()->getIdentity();
+
+		//$user = Factory::getApplication()->getIdentity();
+		$user = $this->getCurrentUser();
+
 		$params = ComponentHelper::getParams($C->option);
 		$query->select(
 			$this->getState('list.select',
@@ -356,7 +359,7 @@ class GhsthingsModel extends ListModel
 
 		$orderCol  = $this->state->get('list.ordering', 'a.id');
 		$orderDirn = $this->state->get('list.direction', 'DESC');
-
+#echo ' 4654sd48sa7d98sD81s8d71dsa <pre>' . print_r($orderCol, true) . '</pre>';exit;
 		if ($orderCol === 'a.ordering' || $orderCol === 'category_title') {
 			$ordering = [
 				$db->qn('c.title') . ' ' . $db->escape($orderDirn),
@@ -396,6 +399,8 @@ class GhsthingsModel extends ListModel
 
 			$item->titleEscaped = htmlspecialchars($item->title, ENT_QUOTES, 'utf-8');
 			$item->aliasEscaped = htmlspecialchars($item->alias, ENT_QUOTES, 'utf-8');
+			$item->parent_category_titleEscaped = htmlspecialchars($item->parent_category_title, ENT_QUOTES, 'utf-8');
+			$item->category_titleEscaped = htmlspecialchars($item->category_title, ENT_QUOTES, 'utf-8');
 		}
 
 		return $items;

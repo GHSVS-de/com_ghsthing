@@ -131,8 +131,7 @@ trait MY_CON
 		$ediCatUrl = 'index.php?option=com_categories&task=category.edit&extension='
 			. $option . '&id=';
 		$sepa = ' &#187; ';
-		$editCatTxt = Text::_('GHSVS_EDIT_CATEGORY');
-		$html[] = Text::_('JCATEGORY') . ': ';
+		$html[] = '<span class=visually-hidden>' . Text::_('JCATEGORIES') . ':</span>';
 
 		/*
 		???? keine Ahnung.
@@ -147,9 +146,13 @@ trait MY_CON
 
 		if ($item->category_level != '1') {
 			if ($item->UCanEditParCat || $item->UCanEditOwnParCat) {
+				$editCatTxt = Text::sprintf('GHSVS_CATEGORY_PAREN_EDITT',
+					$item->parent_category_titleEscaped);
 				$html[] = '<a href="' . Route::_($ediCatUrl . $item->parent_category_id)
 					. '" title="' . $editCatTxt . '">';
 			}
+
+			$html[] = '<span class="visually-hidden">' . Text::_('GHSVS_CATEGORY_PARENT') . ':</span> ';
 			$html[] = $this->escape($item->parent_category_title);
 
 			if ($item->UCanEditParCat || $item->UCanEditOwnParCat) {
@@ -159,10 +162,12 @@ trait MY_CON
 		}
 
 		if ($item->UCanEditCat || $item->UCanEditOwnCat) {
+			$editCatTxt = Text::sprintf('GHSVS_CATEGORY_EDIT',
+					$item->category_titleEscaped);
 			$html[] = '<a href="' . Route::_($ediCatUrl . $item->catid)
 				. '" title="' . $editCatTxt . '">';
 		}
-		$html[] = $this->escape($item->category_title);
+		$html[] = '<span class="alert-link">' . $this->escape($item->category_title) . '</span>';
 
 		if ($item->UCanEditCat || $item->UCanEditOwnCat) {
 			$html[] = '</a>';
@@ -175,6 +180,21 @@ trait MY_CON
 			$html[] = ')';
 		}
 		return implode('', $html);
+	}
 
+	public function MY_CONsetFields(string $context, &$theThis,
+		array $todos = ['fields', 'hidden_fields'])
+	{
+		list($key1, $key2) = explode('|', $context);
+		$jsonFields = json_decode(file_get_contents(
+			JPATH_ADMINISTRATOR . '/components/com_ghsthing/forms/com_ghsthing_fields.json'
+		));
+
+		foreach ($todos as $todo)
+		{
+			if (!empty($jsonFields->$key1->$key2->$todo)) {
+				$theThis->$todo = $jsonFields->$key1->$key2->$todo;
+			}
+		}
 	}
 }
