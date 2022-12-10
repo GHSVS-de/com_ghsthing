@@ -153,6 +153,9 @@ class com_ghsthingInstallerScript extends InstallerScript
 	{
 		// Probiere stattdessen  /** CAN FAIL **/;! https://github.com/joomla/joomla-cms/pull/36506!
 		// und Bugfix https://github.com/joomla/joomla-cms/pull/39391
+
+		return;
+
 		if (!empty($this->dbDropColumns))
 		{
 			Log::add('Starting dbDropColumns().', Log::INFO, $this->logCat);
