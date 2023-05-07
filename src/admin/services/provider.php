@@ -3,7 +3,6 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 
 use Joomla\CMS\Categories\CategoryFactoryInterface;
@@ -29,7 +28,7 @@ use GHSVS\Component\GhsThing\Administrator\Extension\GhsthingComponent;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 
-return new class implements ServiceProviderInterface
+return new class () implements ServiceProviderInterface
 {
 	public function register(Container $container)
 	{

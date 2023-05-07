@@ -477,7 +477,8 @@ class GhsthingModel extends AdminModel
 	}
 
 	/*
-	Beim Laden der Edit-Form im Backend. Wohl nicht beim Speichern?
+	Beim Laden der Edit-Form im Backend. Wohl nicht beim Speichern? Wohl doch SIEHE UNTEN bei $data->ghstest =!
+
 	Parent ist in diesem Fall FormBehaviorTrait bzw. FormModel, das das Trait lädt.
 	Dort werden die Plugins der $group getriggert.
 	$data-Objekt kann aber hier auch direkt manipuliert werden oder eigene Plugin-Trigger.
@@ -485,7 +486,10 @@ class GhsthingModel extends AdminModel
 	*/
 	protected function preprocessData($context, &$data, $group = 'ghsthing')
 	{
-		$data->ghstest = 'ghstest';
+			/*
+			Scheint auch beim Speichern, weil ich einen Fehler "Attempt to assign property "ghstest" on array", wenn ich Speichern klicke
+			 */
+		#########$data->ghstest = 'ghstest';
 		/* PluginHelper::importPlugin($group);
 		Factory::getApplication()->triggerEvent('onGhsthingPrepareData', array($context, &$data)); */
 

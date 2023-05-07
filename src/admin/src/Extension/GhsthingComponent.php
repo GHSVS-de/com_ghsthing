@@ -47,7 +47,6 @@ class GhsthingComponent extends MVCComponent implements
     RouterServiceInterface,
     TagServiceInterface
 {
-    use AssociationServiceTrait;
     use HTMLRegistryAwareTrait;
     use RouterServiceTrait;
     use CategoryServiceTrait, TagServiceTrait {

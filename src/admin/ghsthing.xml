@@ -6,7 +6,7 @@
 	<copyright>(C) 2022, G@HService Berlin Neukölln, Volkmar Volli Schlothauer (ghsvs.de)</copyright>
 	<license>GNU General Public License version 3 or later; see LICENSE.txt.</license>
 	<authorUrl>https://ghsvs.de</authorUrl>
-	<version>2022.10.21</version>
+	<version>2022.10.22</version>
 	<description>COM_GHSTHING_XML_DESCRIPTION</description>
 
 	<updateservers><server type="extension" priority="1" name="COM_GHSTHING">https://raw.githubusercontent.com/GHSVS-de/upadateservers/master/com_ghsthing-update.xml</server></updateservers>
@@ -79,6 +79,7 @@
 			<folder>forms</folder>
 			<folder>language</folder>
 			<folder>layouts</folder>
+			<folder>presets</folder>
 			<folder>services</folder>
 			<folder>sql</folder>
 			<folder>src</folder>

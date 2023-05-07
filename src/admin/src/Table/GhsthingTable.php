@@ -44,10 +44,14 @@ class GhsthingTable extends Table implements VersionableTableInterface, Taggable
 		*/
 	protected $_jsonEncode = array('params', 'metadata');
 
+	protected $_tbl = '#__ghsthing';
+
 	function __construct(DatabaseDriver $db)
 	{
 		$this->typeAlias = 'com_ghsthing.ghsthing';
-		parent::__construct('#__ghsthing', 'id', $db);
+		//parent::__construct('#__ghsthing', 'id', $db);
+		parent::__construct($this->_tbl, 'id', $db);
+
 		// $this->setColumnAlias('title', 'name');
 
 		// Wichtig z.B. bei Klick auf publish buttons in Listen-View.

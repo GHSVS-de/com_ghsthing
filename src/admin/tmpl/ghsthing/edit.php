@@ -34,7 +34,7 @@ $params->merge(new Registry($this->item->params));
 				['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
 
 
-				<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', empty($this->item->id) ? Text::_('COM_CONTACT_NEW_CONTACT') : Text::_('COM_GHSTHING')); ?>
+				<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', empty($this->item->id) ? Text::_('COM_GHSTHING_NEW_GHSTHING') : Text::_('COM_GHSTHING')); ?>
 				<div class="row">
 					<div class="col-lg-9">
 						<div class="row">
