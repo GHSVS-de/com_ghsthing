@@ -17,5 +17,6 @@ _______SCHAU-DIR-DAS-AN
 src/vendor/bin/pscss
 src/vendor/scssphp/scssphp/bin/pscss
 /dist/*.xml
+/dist/admin/*.xml
 /dist/*.txt
 _composer/vendor
