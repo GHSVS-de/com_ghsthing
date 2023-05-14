@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" method="upgrade">
-	<name>COM_GHSTHING</name>
-	<author>G@HService Berlin Neukölln, Volkmar Volli Schlothauer</author>
-	<creationDate>2022-10-16</creationDate>
-	<copyright>(C) 2022, G@HService Berlin Neukölln, Volkmar Volli Schlothauer (ghsvs.de)</copyright>
-	<license>GNU General Public License version 3 or later; see LICENSE.txt.</license>
-	<authorUrl>https://ghsvs.de</authorUrl>
-	<version>2022.10.22</version>
-	<description>COM_GHSTHING_XML_DESCRIPTION</description>
+<extension type="{{type}}" method="{{method}}">
+	<name>{{nameUpper}}</name>
+	<author>{{authorName}}</author>
+	<creationDate>{{creationDate}}</creationDate>
+	<copyright>{{copyright}}</copyright>
+	<license>{{licenseLong}}</license>
+	<authorUrl>{{authorUrl}}</authorUrl>
+	<version>{{version}}</version>
+	<description>{{nameUpper}}_XML_DESCRIPTION</description>
 
-	<updateservers><server type="extension" priority="1" name="COM_GHSTHING">https://raw.githubusercontent.com/GHSVS-de/upadateservers/master/com_ghsthing-update.xml</server></updateservers>
+	<updateservers><server type="extension" priority="1" name="{{nameUpper}}">{{xmlserver}}/{{name}}-update.xml</server></updateservers>
 
-	<changelogurl>https://raw.githubusercontent.com/GHSVS-de/upadateservers/master/com_ghsthing-changelog.xml</changelogurl>
-
-	<infourl>https://updates.ghsvs.de/changelog.php?file=com_ghsthing</infourl>
+	<infourl>{{infourl}}</infourl>
 
 	<scriptfile>installerScript.php</scriptfile>
-	<minimumPhp>7.4.0</minimumPhp>
-	<maximumPhp>8.99999.99999</maximumPhp>
-	<minimumJoomla>4.2.5</minimumJoomla>
-	<maximumJoomla>4.9999.9999</maximumJoomla>
-	<allowDowngrades>1</allowDowngrades>
-	<dbservertype>mysql</dbservertype>
+	<minimumPhp>{{minimumPhp}}</minimumPhp>
+	<maximumPhp>{{maximumPhp}}</maximumPhp>
+	<minimumJoomla>{{minimumJoomla}}</minimumJoomla>
+	<maximumJoomla>{{maximumJoomla}}</maximumJoomla>
+	<allowDowngrades>{{allowDowngrades}}</allowDowngrades>
+	<dbservertype>{{dbservertype}}</dbservertype>
 
 	<install>
 		<sql>
@@ -29,11 +27,11 @@
 		</sql>
 	</install>
 
-	<uninstall>
+	<!-- <uninstall>
 		<sql>
 			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
 		</sql>
-	</uninstall>
+	</uninstall> -->
 
 	<update>
 		<schemas>
@@ -52,21 +50,21 @@
 	im Ordner /admin/, dann muss dem /media/-Ordner "../" hinzugefügt werden, da sonst Installer::parseMedia()
 	den $source-Pfad falsch interprtiert als /admin/media/ statt /media/
 	-->
-	<media destination="com_ghsthing" folder="../media">
+	<media destination="{{name}}" folder="../media">
 		<filename>joomla.asset.json</filename>
 		<folder>css</folder>
 	</media>
 
 	<administration>
-		<menu>COM_GHSTHING</menu>
+		<menu>{{nameUpper}}</menu>
 
 		<submenu>
-			<menu link="option=com_ghsthing">
-				COM_GHSTHING_GHSTHINGS
+			<menu link="option={{name}}">
+				{{nameUpper}}_GHSTHINGS
 			</menu>
 
-			<menu link="option=com_categories&amp;extension=com_ghsthing" view="categories">
-					COM_GHSTHING_CATEGORIES
+			<menu link="option=com_categories&amp;extension={{name}}" view="categories">
+					{{nameUpper}}_CATEGORIES
 			</menu>
 		</submenu>
 
@@ -88,5 +86,5 @@
 
 	</administration>
 
-	<namespace path="src">GHSVS\Component\GhsThing</namespace>
+	{{namespace}}
 </extension>
