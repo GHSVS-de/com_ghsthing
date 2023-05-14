@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "com_ghsthing",
+  "version": "2022.10.22",
+  "description": "Joomla component. Manages ghsthings.",
+  "license": "GNU General Public License version 3 or later; see LICENSE.txt.",
+  "assets": [
+    {
+      "name": "com_ghsthing.css.backend",
+      "type": "style",
+      "uri": "com_ghsthing/backend.css",
+      "version": "2022.10.22"
+    },
+    {
+      "name": "com_ghsthing.css.backend-edit",
+      "type": "style",
+      "uri": "com_ghsthing/backend-edit.css",
+      "version": "2022.10.22"
+    }
+  ]
+}
