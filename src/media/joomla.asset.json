@@ -1,21 +1,21 @@
 {
   "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
-  "name": "com_ghsthing",
-  "version": "4.0.0",
-  "description": "Joomla CMS",
-  "license": "GPL-2.0-or-later",
+  "name": "{{name}}",
+  "version": "{{version}}",
+  "description": "{{description}}",
+  "license": "{{licenseLong}}",
   "assets": [
     {
-      "name": "com_ghsthing.css.backend",
+      "name": "{{name}}.css.backend",
       "type": "style",
-      "uri": "com_ghsthing/backend.css",
-      "version": "499a9068558e5a85a56f8b4cc3149b2ab3b4dd01"
+      "uri": "{{name}}/backend.css",
+      "version": "{{version}}"
     },
     {
-      "name": "com_ghsthing.css.backend-edit",
+      "name": "{{name}}.css.backend-edit",
       "type": "style",
-      "uri": "com_ghsthing/backend-edit.css",
-      "version": "499a9068558e5a85a56f8b4cc3149b2ab3b4dd01"
+      "uri": "{{name}}/backend-edit.css",
+      "version": "{{version}}"
     }
   ]
 }
