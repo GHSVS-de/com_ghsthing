@@ -43,7 +43,6 @@ class GhsthingComponent extends MVCComponent implements
     BootableExtensionInterface,
     CategoryServiceInterface,
     FieldsServiceInterface,
-    AssociationServiceInterface,
     RouterServiceInterface,
     TagServiceInterface
 {
