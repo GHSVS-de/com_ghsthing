@@ -182,10 +182,15 @@ trait MY_CON
 		return implode('', $html);
 	}
 
+	/*
+		Manipuliere $this->fields, $this->hidden_fields, z.B. für edit.php Fromular.
+	*/
 	public function MY_CONsetFields(string $context, &$theThis,
-		array $todos = ['fields', 'hidden_fields'])
+		array $todos = ['fields', 'hidden_fields', 'disabled_fields'])
 	{
+		// z.B. 'ghsthing.edit|publishingdata'. Das sind Keys im JSON.w
 		list($key1, $key2) = explode('|', $context);
+
 		$jsonFields = json_decode(file_get_contents(
 			JPATH_ADMINISTRATOR . '/components/com_ghsthing/forms/com_ghsthing_fields.json'
 		));

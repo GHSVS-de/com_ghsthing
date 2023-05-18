@@ -16,8 +16,8 @@ $wa->useStyle($C->option . '.css.backend');
 $wa->useStyle($C->option . '.css.backend-edit');
 $wa->getRegistry()->addExtensionRegistryFile('com_contenthistory');
 $wa->useScript('keepalive')
-    ->useScript('form.validate')
-    ->useScript('com_contenthistory.admin-history-versions');
+		->useScript('form.validate')
+		->useScript('com_contenthistory.admin-history-versions');
 
 // Create shortcut to parameters.
 $params = clone $this->state->get('params');
@@ -27,41 +27,91 @@ $params->merge(new Registry($this->item->params));
 	. '&layout=edit&id=' . (int) $this->item->id); ?>"
 	method="post" name="adminForm" id="item-form" class="form-validate">
 
-    <?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
+	<?php #echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
-		<div class="main-card">
-			<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab',
-				['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
+	<div class="main-card">
+		<?php echo HTMLHelper::_('uitab.startTabSet', 'myTab',
+			['active' => 'details', 'recall' => true, 'breakpoint' => 768]); ?>
 
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', Text::_('COM_GHSTHING')); ?>
 
-				<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'details', empty($this->item->id) ? Text::_('COM_GHSTHING_NEW_GHSTHING') : Text::_('COM_GHSTHING')); ?>
 				<div class="row">
-					<div class="col-lg-9">
+					<div class="col-12 col-lg-12">
 						<div class="row">
 							<div class="col-12">
-								<?php echo $this->form->renderField('articletext'); ?>
+								<?php echo LayoutHelper::render('joomla.edit.title_alias', $this); ?>
+
+								<div>
+									<?php
+									/*
+									Notwendige Zwischenspeicherung, um später wieder rücksetzen zu können.
+									Ist durch Joomla verursacht, dass nötig.
+									*/
+									$fieldsSafe = $this->fields;
+									$hiddenfieldsSafe = $this->hidden_fields;
+
+									/*
+									Die $this->fields mit denen aus com_ghsthing_fields.json ersetzen.
+									Eigene Sortierung etc.
+									*/
+									$this->MY_CONsetFields('ghsthing.edit|global', $this);
+
+									echo LayoutHelper::render('ghsvs.global', $this);
+
+									/*
+									Aus Zwischengepeicherten wieder rücksetzen.
+									*/
+									$this->fields = $fieldsSafe;
+									$this->hidden_fields = $hiddenfieldsSafe;
+									?>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-lg-3">
-						<?php echo LayoutHelper::render('joomla.edit.global', $this); ?>
+					<div class="col-lgssssssssss-3">
+
 					</div>
-				</div>
-				<?php echo HTMLHelper::_('uitab.endTab'); ?>
+				</div><!--/.row-->
+			<?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+			<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'content', Text::_('COM_GHSTHING')); ?>
+
+				<div class="row">
+							<div class="col-12">
+								<?php echo $this->form->renderField('articletext'); ?>
+							</div>
+				</div><!--/.row-->
+			<?php echo HTMLHelper::_('uitab.endTab'); ?>
+
 
 <?php if ($params->get('show_publishing_options', 1) == 1) : ?>
 	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'publishing',
 		Text::_('JGLOBAL_FIELDSET_PUBLISHING')); ?>
+
 		<div class="row">
 			<div class="col-12 col-lg-12">
 				<fieldset id="fieldset-publishingdata" class="options-form">
 					<legend><?php echo Text::_('JGLOBAL_FIELDSET_PUBLISHING'); ?></legend>
 					<div>
 						<?php
+						/*
+						Notwendige Zwischenspeicherung, um später wieder rücksetzen zu können.
+						Ist durch Joomla verursacht, dass nötig.
+						*/
 						$fieldsSafe = $this->fields;
 						$hiddenfieldsSafe = $this->hidden_fields;
+
+						/*
+						Die $this->fields mit denen aus com_ghsthing_fields.json ersetzen.
+						Eigene Sortierung etc.
+						*/
 						$this->MY_CONsetFields('ghsthing.edit|publishingdata', $this);
-						echo LayoutHelper::render('joomla.edit.publishingdata', $this);
+
+						echo LayoutHelper::render('ghsvs.publishingdata', $this);
+
+						/*
+						Aus Zwischengepeicherten wieder rücksetzen.
+						*/
 						$this->fields = $fieldsSafe;
 						$this->hidden_fields = $hiddenfieldsSafe;
 						?>
@@ -90,6 +140,6 @@ $params->merge(new Registry($this->item->params));
 			<?php echo HTMLHelper::_('uitab.endTabSet'); ?>
 		</div><!--/main-card-->
 
-    <input type="hidden" name="task" value="<?php echo $C->vSingle; ?>.edit" />
-    <?php echo HTMLHelper::_('form.token'); ?>
+		<input type="hidden" name="task" value="<?php echo $C->vSingle; ?>.edit" />
+		<?php echo HTMLHelper::_('form.token'); ?>
 </form>

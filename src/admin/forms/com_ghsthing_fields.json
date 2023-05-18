@@ -20,6 +20,24 @@
 			"hidden_fields": [
 				"publish_upnureinTest"
 			]
+		},
+		"global": {
+			"fields": [
+				"state",
+				"catid",
+				"featured",
+				"access",
+				"language",
+				"tags",
+				"note",
+				"version_note"
+			],
+			"hidden_fields": [
+				"publish_upnureinTest"
+			],
+			"disabled_fields": [
+				"version_note"
+			]
 		}
 	}
 }

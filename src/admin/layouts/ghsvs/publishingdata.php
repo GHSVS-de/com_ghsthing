@@ -1,8 +1,14 @@
 <?php
+/*
+Ist eine bearbeitete Kopie der layouts\joomla\edit\publishingdata.php.
+1.) Manipuliere ich die $this-fields zuvor (siehe com_ghsthing_fields.json).
+2.) Geht mir die Anordnung durch Joomla selbst seit jeher auf den Sack.
+*/
 defined('_JEXEC') or die;
 
 $form = $displayData->getForm();
 
+// Im Normalfall von mir verändert. Das array() ist lediglich ein Fallback.
 $fields = $displayData->get('fields') ?: array(
 	'publish_up',
 	'publish_down',
