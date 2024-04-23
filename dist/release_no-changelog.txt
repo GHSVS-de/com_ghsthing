@@ -1,0 +1,32 @@
+2024.04.23
+
+Joomla component COM_GHSTHING. 2024.04.23
+
+Joomla component. Manages ghsthings.
+
+### Download
+[com_ghsthing-2024.04.23.zip](https://github.com/GHSVS-de/com_ghsthing/raw/2024.04.23/dist/com_ghsthing-2024.04.23.zip)
+
+### Joomla-Target-Platform(s)
+4\.(3|4|5|6|7|8|9|10|11|12|13|14|15)<br>5.&ast;
+
+### For the interested ones
+- Deutsche Beschreibung: 
+- English Description: 
+- [Compare releases 2022.10.22...2024.04.23](https://github.com/GHSVS-de/com_ghsthing/compare/2022.10.22...2024.04.23)
+- minimumJoomla: 4.3.0
+- maximumJoomla: 5.9999.9999
+- minimumPhp: 7.4.2
+- maximumPhp: 
+- Checksum: `<sha256>5952a05b9d83fc43f44f2f6bc4781f19ac28225b8fdef74a1ba8f9d166d9e4f0</sha256>`
+- Readme: https://github.com/GHSVS-de/mod_cardsghsvs#readme
+- Updates XML: https://raw.githubusercontent.com/GHSVS-de/upadateservers/master/com_ghsthing-update.xml
+- Last tests: PHP 8.1<br>PHP 8.3<br>Joomla 4.4
+- Language files: 
+- Requires: 
+- Uses: 
+- Contained packages (sub Joomla extensions):
+```
+
+```
+
