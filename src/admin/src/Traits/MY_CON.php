@@ -186,7 +186,7 @@ trait MY_CON
 		Manipuliere $this->fields, $this->hidden_fields, z.B. für edit.php Fromular.
 	*/
 	public function MY_CONsetFields(string $context, &$theThis,
-		array $todos = ['fields', 'hidden_fields', 'disabled_fields'])
+		array $todos = ['fields', 'hidden_fields', 'disabled_fields', 'colClass'])
 	{
 		// z.B. 'ghsthing.edit|publishingdata'. Das sind Keys im JSON.w
 		list($key1, $key2) = explode('|', $context);
@@ -201,5 +201,20 @@ trait MY_CON
 				$theThis->$todo = $jsonFields->$key1->$key2->$todo;
 			}
 		}
+	}
+
+	/*
+		Hole Formulardaten aus JSON-Datei, z.B. für edit.php Fromular.
+	*/
+	public function MY_CONgetEditFormDataFromJson(string $context) : object
+	{
+		// z.B. 'ghsthing.edit|publishingdata'. Das sind Keys im JSON.w
+		list($key1, $key2) = explode('|', $context);
+
+		$jsonFields = json_decode(file_get_contents(
+			JPATH_ADMINISTRATOR . '/components/com_ghsthing/forms/com_ghsthing_fields.json'
+		));
+
+		return $jsonFields->$key1->$key2;
 	}
 }

@@ -17,21 +17,24 @@
 				"created_by",
 				"modified_by"
 			],
+			"colClass": "col-2",
 			"hidden_fields": [
 				"publish_upnureinTest"
 			]
 		},
 		"global": {
 			"fields": [
-				"state",
 				"catid",
-				"featured",
+				"state",
+
 				"access",
 				"language",
 				"tags",
 				"note",
-				"version_note"
+				"version_note",
+				"featured"
 			],
+			"colClass": "col-4",
 			"hidden_fields": [
 				"publish_upnureinTest"
 			],

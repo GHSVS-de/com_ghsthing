@@ -52,7 +52,7 @@
 			name="articletext"
 			type="editor"
 			label="COM_GHSTHING_ARTICLETEXT"
-			filter="JComponentHelper::filterText"
+			filter="\Joomla\CMS\Component\ComponentHelper::filterText"
 			buttons="true"
 		/>
 

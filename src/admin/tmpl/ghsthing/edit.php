@@ -51,12 +51,15 @@ $params->merge(new Registry($this->item->params));
 									$hiddenfieldsSafe = $this->hidden_fields;
 
 									/*
-									Die $this->fields mit denen aus com_ghsthing_fields.json ersetzen.
-									Eigene Sortierung etc.
-									*/
-									$this->MY_CONsetFields('ghsthing.edit|global', $this);
 
-									echo LayoutHelper::render('ghsvs.global', $this);
+									*/
+									$fromJsonData = $this->MY_CONgetEditFormDataFromJson('ghsthing.edit|global');
+
+									echo LayoutHelper::render('ghsvs.editFormFields',
+									[
+										'fromJsonData' => new Registry($fromJsonData),
+										'form' => $this->getForm()
+									]);
 
 									/*
 									Aus Zwischengepeicherten wieder rücksetzen.

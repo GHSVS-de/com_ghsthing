@@ -34,7 +34,7 @@ $hiddenFields = $displayData->get('hidden_fields') ?: array();
 				if (in_array($f, $hiddenFields)) {
 					$form->setFieldAttribute($f, 'type', 'hidden');
 				} ?>
-				<div class="col">
+				<div class="col-4">
 					<?php
 						echo $form->renderField($f, $group = null, $default = null,
 							$options = ['class' => 'wurst']);
