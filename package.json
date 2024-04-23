@@ -2,7 +2,7 @@
 	"name": "com_ghsthing",
 	"nameReal": "com_ghsthing",
 	"filename": "ghsthing",
-	"version": "2022.10.22",
+	"version": "2024.04.23",
 	"versionCompare": "2022.10.22",
 	"update": {
 		"infourl": "https://github.com/GHSVS-de/com_ghsthing/releases",
@@ -12,7 +12,8 @@
 		"element": "com_ghsthing",
 		"tag": "stable",
 		"targetplatform": [
-			"4.[3456789]"
+			"4\\.(3|4|5|6|7|8|9|10|11|12|13|14|15)",
+			"5.*"
 		],
 		"namespace": "GHSVS\\Component\\GhsThing"
 	},
@@ -29,15 +30,15 @@
 		"docsDE": "",
 		"docsEN": "",
 		"lastTests": [
-			"PHP 7.4",
 			"PHP 8.1",
-			"Joomla 4.3"
+			"PHP 8.3",
+			"Joomla 4.4"
 		]
 	},
 	"minimumPhp": "7.4.2",
-	"maximumPhp": "8.99999.99999",
+	"maximumPhp": "",
 	"minimumJoomla": "4.3.0",
-	"maximumJoomla": "4.9999.9999",
+	"maximumJoomla": "5.9999.9999",
 	"allowDowngrades": "1",
 	"dbservertype": "mysql",
 	"creationDate": "2022-10-22",
@@ -57,7 +58,7 @@
 	"homepage": "https://github.com/GHSVS-de/mod_cardsghsvs#readme",
 	"keywords": [
 		"joomla",
-		"site module"
+		"component"
 	],
 	"private": false,
 	"description": "Joomla component. Manages ghsthings.",
