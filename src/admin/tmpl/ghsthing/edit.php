@@ -50,10 +50,9 @@ $params->merge(new Registry($this->item->params));
 									$fieldsSafe = $this->fields;
 									$hiddenfieldsSafe = $this->hidden_fields;
 
-									/*
-
-									*/
-									$fromJsonData = $this->MY_CONgetEditFormDataFromJson('ghsthing.edit|global');
+									$fromJsonData = $this->MY_CONgetEditFormDataFromJson(
+										'ghsthing.edit|global'
+									);
 
 									echo LayoutHelper::render('ghsvs.editFormFields',
 									[
@@ -104,13 +103,15 @@ $params->merge(new Registry($this->item->params));
 						$fieldsSafe = $this->fields;
 						$hiddenfieldsSafe = $this->hidden_fields;
 
-						/*
-						Die $this->fields mit denen aus com_ghsthing_fields.json ersetzen.
-						Eigene Sortierung etc.
-						*/
-						$this->MY_CONsetFields('ghsthing.edit|publishingdata', $this);
+						$fromJsonData = $this->MY_CONgetEditFormDataFromJson(
+							'ghsthing.edit|publishingdata'
+						);
 
-						echo LayoutHelper::render('ghsvs.publishingdata', $this);
+						echo LayoutHelper::render('ghsvs.editFormFields',
+						[
+							'fromJsonData' => new Registry($fromJsonData),
+							'form' => $this->getForm()
+						]);
 
 						/*
 						Aus Zwischengepeicherten wieder rücksetzen.
@@ -122,6 +123,42 @@ $params->merge(new Registry($this->item->params));
 				</fieldset>
 			</div>
 		</div>
+	<?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'images',
+		Text::_('GHSVS_IMAGES')); ?>
+
+		<div class="row">
+			<div class="col-12 col-lg-12">
+				<?php foreach (['image-intro', 'image-full'] as $fieldset) : ?>
+				<fieldset id="fieldset-<?php echo $fieldset; ?>" class="options-form">
+				<legend><?php echo Text::_($this->form->getFieldsets()[$fieldset]->label); ?></legend>
+				<div>
+				<?php echo $this->form->renderFieldset($fieldset); ?>
+				</div>
+				</fieldset>
+				<?php endforeach; ?>
+			</div>
+		</div>
+
+	<?php echo HTMLHelper::_('uitab.endTab'); ?>
+
+	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'gallery',
+		Text::_('GHSVS_IMAGES_GALLERY')); ?>
+
+		<div class="row">
+			<div class="col-12 col-lg-12">
+				<?php foreach (['fotos'] as $fieldset) : ?>
+				<fieldset id="fieldset-<?php echo $fieldset; ?>" class="options-form">
+				<legend><?php echo Text::_($this->form->getFieldsets()[$fieldset]->label); ?></legend>
+				<div>
+				<?php echo $this->form->renderFieldset($fieldset); ?>
+				</div>
+				</fieldset>
+				<?php endforeach; ?>
+			</div>
+		</div>
+
 	<?php echo HTMLHelper::_('uitab.endTab'); ?>
 
 	<?php echo HTMLHelper::_('uitab.addTab', 'myTab', 'metadata',

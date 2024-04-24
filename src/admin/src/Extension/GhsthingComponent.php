@@ -10,6 +10,8 @@
 
 namespace GHSVS\Component\GhsThing\Administrator\Extension;
 
+use Joomla\CMS\Helper\ContentHelper as LibraryContentHelper;
+
 use Joomla\CMS\Association\AssociationServiceInterface;
 use Joomla\CMS\Association\AssociationServiceTrait;
 use Joomla\CMS\Categories\CategoryServiceInterface;
@@ -149,5 +151,29 @@ class GhsthingComponent extends MVCComponent implements
     protected function getStateColumnForSection(string $section = null)
     {
         return 'published';
+    }
+
+   /**
+     * Adds Count Items for Category Manager.
+     *
+     * @param   \stdClass[]  $items    The category objects
+     * @param   string       $section  The section
+     *
+     * @return  void
+     *
+     * @since   4.0.0
+     */
+    public function countItems(array $items, string $section)
+    {
+        $config = (object) [
+            'related_tbl'         => 'ghsthing',
+            'state_col'           => 'state',
+            'group_col'           => 'catid',
+            'relation_type'       => 'category_or_group',
+            'uses_workflows'      => false,
+            'workflows_component' => 'com_ghsthing',
+        ];
+
+        LibraryContentHelper::countRelations($items, $config);
     }
 }

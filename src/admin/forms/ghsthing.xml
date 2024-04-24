@@ -3,6 +3,7 @@
 	<config>
 		<inlinehelp button="show"/>
 	</config>
+	
 	<fieldset addfieldprefix="GHSVS\Component\GhsThing\Administrator\Field">
 		<field
 			name="id"
@@ -287,4 +288,82 @@
 
 		</fieldset>
 	</fields>
+
+	<fields name="images" label="GHSVS_IMAGES">
+		<fieldset name="image-intro" label="GHSVS_IMAGES_INTRO">
+			<field
+				name="image_intro"
+				type="media"
+				label="GHSVS_IMAGES_INTRO"
+				hiddenLabel="true"
+				schemes="http,https,ftp,ftps,data,file"
+				validate="url"
+				relative="true"
+			/>
+
+			<field
+				name="image_intro_alt"
+				type="textarea"
+				label="GHSVS_IMAGES_ALT"
+			/>
+
+			<field
+				name="float_intro"
+				type="textarea"
+				label="GHSVS_IMAGES_CLASS"
+				useglobal="true"
+				validate="CssIdentifier"
+			/>
+
+			<field
+				name="image_intro_caption"
+				type="textarea"
+				label="GHSVS_IMAGES_CAPTION"
+			/>
+
+		</fieldset>
+
+		<fieldset name="image-full" label="GHSVS_IMAGES_FULL">
+			<field
+				name="image_fulltext"
+				type="media"
+				schemes="http,https,ftp,ftps,data,file"
+				hiddenLabel="true"
+				validate="url"
+				relative="true"
+				label="GHSVS_IMAGES_FULL"
+			/>
+
+			<field
+				name="image_fulltext_alt"
+				type="textarea"
+				label="GHSVS_IMAGES_ALT"
+			/>
+
+			<field
+				name="float_fulltext"
+				type="textarea"
+				label="GHSVS_IMAGES_CLASS"
+				useglobal="true"
+				validate="CssIdentifier"
+			/>
+
+			<field
+				name="image_fulltext_caption"
+				type="textarea"
+				label="GHSVS_IMAGES_CAPTION"
+			/>
+		</fieldset>
+
+		<fieldset name="fotos" label="GHSVS_IMAGES_FOTOS">
+			<field name="fotos" type="subform" min="1" max="100" multiple="true"
+				formsource="administrator/components/com_ghsthing/forms/subform.xml"
+				layout="joomla.form.field.subform.repeatable" groupByFieldset="false"
+				label=""
+				hiddenLabel="true"
+				description=""/>
+		</fieldset>
+
+	</fields><!--/images -->
+
 </form>

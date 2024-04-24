@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `#__ghsthing`
 	`access` int unsigned NOT NULL DEFAULT 0,
 	`metadata` text NOT NULL,
 	`featured` tinyint unsigned NOT NULL DEFAULT 0,
-	`language` char(7) NOT NULL,
+	`language` char(7) NOT NULL DEFAULT '',
 	`note` varchar(255) NOT NULL DEFAULT '',
 	`asset_id` int unsigned NOT NULL DEFAULT 0,
 
