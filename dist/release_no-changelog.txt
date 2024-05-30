@@ -1,10 +1,19 @@
+<<<<<<< Updated upstream
 2024.04.23
 
 Joomla component COM_GHSTHING. 2024.04.23
+=======
+2022.10.22
+
+Joomla component COM_GHSTHING. 2022.10.22
+
+Checksum entities: `&lt;sha256&gt;1836da3805d6f27b4952466f719c26487f9e6ed36a3f484e70662a71e2bbdeab&lt;/sha256&gt;`
+>>>>>>> Stashed changes
 
 Joomla component. Manages ghsthings.
 
 ### Download
+<<<<<<< Updated upstream
 [com_ghsthing-2024.04.23.zip](https://github.com/GHSVS-de/com_ghsthing/raw/2024.04.23/dist/com_ghsthing-2024.04.23.zip)
 
 ### Joomla-Target-Platform(s)
@@ -22,6 +31,18 @@ Joomla component. Manages ghsthings.
 - Readme: https://github.com/GHSVS-de/mod_cardsghsvs#readme
 - Updates XML: https://raw.githubusercontent.com/GHSVS-de/upadateservers/master/com_ghsthing-update.xml
 - Last tests: PHP 8.1<br>PHP 8.3<br>Joomla 4.4
+=======
+[com_ghsthing-2022.10.22.zip](https://github.com/GHSVS-de/com_ghsthing/raw/2022.10.22/dist/com_ghsthing-2022.10.22.zip)
+
+### Joomla-Target-Platform(s)
+4.[3456789]
+
+### For the interested ones
+- [Compare releases 2022.10.22...2022.10.22](https://github.com/GHSVS-de/com_ghsthing/compare/2022.10.22...2022.10.22)
+- Checksum: `<sha256>1836da3805d6f27b4952466f719c26487f9e6ed36a3f484e70662a71e2bbdeab</sha256>`
+- Updates XML: https://raw.githubusercontent.com/GHSVS-de/upadateservers/master/com_ghsthing-update.xml
+- Last tests: PHP 7.4<br>PHP 8.1<br>Joomla 4.3
+>>>>>>> Stashed changes
 - Language files: 
 - Requires: 
 - Uses: 
