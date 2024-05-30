@@ -6,7 +6,11 @@
 	<copyright>(C) 2022, G@HService Berlin Neukölln, Volkmar Volli Schlothauer (ghsvs.de)</copyright>
 	<license>GNU General Public License version 3 or later; see LICENSE.txt.</license>
 	<authorUrl>https://ghsvs.de</authorUrl>
+<<<<<<< Updated upstream
 	<version>2024.04.23</version>
+=======
+	<version>2022.10.22</version>
+>>>>>>> Stashed changes
 	<description>COM_GHSTHING_XML_DESCRIPTION</description>
 
 	<updateservers><server type="extension" priority="1" name="COM_GHSTHING">https://raw.githubusercontent.com/GHSVS-de/upadateservers/master/com_ghsthing-update.xml</server></updateservers>
@@ -15,9 +19,15 @@
 
 	<scriptfile>installerScript.php</scriptfile>
 	<minimumPhp>7.4.2</minimumPhp>
+<<<<<<< Updated upstream
 	<maximumPhp></maximumPhp>
 	<minimumJoomla>4.3.0</minimumJoomla>
 	<maximumJoomla>5.9999.9999</maximumJoomla>
+=======
+	<maximumPhp>8.99999.99999</maximumPhp>
+	<minimumJoomla>4.3.0</minimumJoomla>
+	<maximumJoomla>4.9999.9999</maximumJoomla>
+>>>>>>> Stashed changes
 	<allowDowngrades>1</allowDowngrades>
 	<dbservertype>mysql</dbservertype>
 
@@ -53,7 +63,10 @@
 	<media destination="com_ghsthing" folder="../media">
 		<filename>joomla.asset.json</filename>
 		<folder>css</folder>
+<<<<<<< Updated upstream
 		<folder>js</folder>
+=======
+>>>>>>> Stashed changes
 	</media>
 
 	<administration>
